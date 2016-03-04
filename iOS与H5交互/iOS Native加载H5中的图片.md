@@ -1,0 +1,288 @@
+
+#前言
+最近iOS App项目中使用Webview加载H5页面比较多，也有不少朋友经常问到这个问题，在这里我也学习学习如何通过iOS原生的方式来加载H5页面中的图片然后让webview显示图片。
+
+相信有很多朋友也遇到过这样的问题，可是很多朋友都没有思路，不知如何入手。今天，刚好学习了一下，并写了一个简单的demo。下面让我们一起来学习一下吧！
+
+**本篇文章适合哪些人群阅读？**
+
+* 项目中有类似需求的，而又没有思路的
+* 曾经做过类似需求的，可以参考两者的思想有何异同，比较哪种方式更好
+* 没有做过类似需求，且也没有思路入手的，可以参考学习
+
+注意：本文有Objective-C版和Swift，根据个人情况看相关章节
+
+#思路讲解
+
+这里有两种方式可以实现：
+
+* 直接使用NSData同步加载图片的方式（**Swift版用同步实现**）
+* 通过其他第三方库异步加载图片的方式（**ObjC版用异步实现**）
+
+#Swift版代码讲解
+
+下面看看我们的核心代码吧：
+
+```
+let path = NSBundle.mainBundle().pathForResource("test", ofType: "html")
+let url = NSURL(fileURLWithPath: path!)
+
+do {
+  let html = try String(contentsOfURL: url, encoding: NSUTF8StringEncoding)
+  //      print(html)
+  
+  // 获取所有img src中的src链接，并将src更改名称
+  // 这里直接采用同步获取数据，异步也是一样的道理，为了方便写demo，仅以同步加载图片为例。
+  // 另外，这不考虑清除缓存的问题。
+  do {
+    let regex = try NSRegularExpression(pattern: "<img\\ssrc[^>]*/>", options: .AllowCommentsAndWhitespace)
+    
+    let result = regex.matchesInString(html, options: .ReportCompletion, range: NSMakeRange(0, html.characters.count))
+    
+    var content = html as NSString
+    var sourceSrcs: [String: String] = ["": ""]
+    
+    for item in result {
+      let range = item.rangeAtIndex(0)
+      
+      let imgHtml = content.substringWithRange(range) as NSString
+      var array = [""]
+      
+      if imgHtml.rangeOfString("src=\"").location != NSNotFound {
+        array = imgHtml.componentsSeparatedByString("src=\"")
+      } else if imgHtml.rangeOfString("src=").location != NSNotFound {
+        array = imgHtml.componentsSeparatedByString("src=")
+      }
+      
+      if array.count >= 2 {
+        var src = array[1] as NSString
+        if src.rangeOfString("\"").location != NSNotFound {
+          src = src.substringToIndex(src.rangeOfString("\"").location)
+          
+          // 图片链接正确解析出来
+          print(src)
+          
+          // 加载图片
+          // 这里不处理重复加载的问题，实际开发中，应该要做一下处理。
+          // 也就是先判断是否已经加载过，且未清理掉该缓存的图片。如果
+          // 已经缓存过，否则才执行下面的语句。
+          let data = NSData(contentsOfURL: NSURL(string: src as String)!)
+          let localUrl = self.saveImageData(data!, name: (src as String).md5)
+          
+          // 记录下原URL和本地URL
+          // 如果用异步加载图片的方式，先可以提交将每个URL起好名字，由于这里使用的是原URL的md5作为名称，
+          // 因此每个URL的名字是固定的。
+          sourceSrcs[src as String] = localUrl
+        }
+      }
+    }
+    
+    for (src, localUrl) in sourceSrcs {
+      if !localUrl.isEmpty {
+        content = content.stringByReplacingOccurrencesOfString(src as String, withString: localUrl, options: NSStringCompareOptions.LiteralSearch, range: NSMakeRange(0, content.length))
+      }
+    }
+    
+    print(content as String)
+    webView.loadHTMLString(content as String, baseURL: url)
+  } catch {
+    print("match error")
+  }
+} catch {
+  print("load html error")
+}
+```
+
+###NSData同步加载图片
+
+可以直接通过NSData来加载图片，加载完成后，将图片保存到本地：
+
+```
+// 加载图片
+// 这里不处理重复加载的问题，实际开发中，应该要做一下处理。
+// 也就是先判断是否已经加载过，且未清理掉该缓存的图片。如果
+// 已经缓存过，否则才执行下面的语句。
+let data = NSData(contentsOfURL: NSURL(string: src as String)!)
+let localUrl = self.saveImageData(data!, name: (src as String).md5)
+```
+
+###异步加载图片
+
+这里的Demo中没有使用异步加载图片，其实与同步没有多大的差别，在这里只是说一下思路，具体开发时，也是很容易套用的。这里很巧妙地使用HTML中的原始图片URL作为Key，而原始图片URL的md5值作为图片的名称，但是只要我们将图片都统一存储到同一个沙盒中的同一个目录下，那么每个图片存储到本地后的名称就是固定的了。因此，我们就可以在匹配到所有的`<img src="..."/>`之后，取得src的值，然后将这个url进行md5加密，再获取document目录的路径，就可以得到这个url在异步加载好图片后存储下来的名称，那么我们就可以在异步加载图片之前，先修改这个url为本地存储的路径。剩下的就不用多说了吧。
+
+在处理加也需要存储本地图片路径与网页中的图片链接，并通过键值对的方式来关联起来。
+
+```
+// 记录下原URL和本地URL
+// 如果用异步加载图片的方式，先可以提交将每个URL起好名字，
+// 由于这里使用的是原URL的md5作为名称，
+// 因此每个URL的名字是固定的。
+sourceSrcs[src as String] = localUrl
+```
+
+在获取HTML中原始URL与本地图片的存储路径关联值后，就可以将HTML中的所有原始url替换成我们ios沙盒中存储的图片路径，如下：
+
+```
+for (src, localUrl) in sourceSrcs {
+  if !localUrl.isEmpty {
+    content = content.stringByReplacingOccurrencesOfString(src as String, withString: localUrl, options: NSStringCompareOptions.LiteralSearch, range: NSMakeRange(0, content.length))
+  }
+}
+```
+
+当我们已经全部将HTML中原始的图片路径都替换成ios沙盒中存储的图片路径后，就可以通过Webview加载了：
+
+```
+webView.loadHTMLString(content as String, baseURL: url)
+```
+
+#ObjC版代码讲解
+
+首先，我们要获取HTML内容，并通过正则表达式来匹配出所有的`<img src="..."/>`的标签：
+
+```
+NSURL *url = [[NSBundle mainBundle] URLForResource:@"test" withExtension:@"html"];
+NSString *html = [[NSString alloc] initWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil];
+  
+NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"<img\\ssrc[^>]*/>" options:NSRegularExpressionAllowCommentsAndWhitespace error:nil];
+  
+NSArray *result = [regex matchesInString:html options:NSMatchingReportCompletion range:NSMakeRange(0, html.length)];
+```
+
+接下来，我们需要一个字典来存储HTML原始的URL和与之关联的本地URL。由于使用原始URL的md5值作为文件名字，因此本地路径也就唯一确定了。这里就将图片都放到Document下。
+
+```
+NSMutableDictionary *urlDicts = [[NSMutableDictionary alloc] init];
+NSString *docPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+```
+
+然后，我们需要遍历所有匹配到的`<img src="..."/>`标签，并提取出Src属性值，也就是我们要的原始URL。将并该URL存储下来，以便下一步替换。
+
+```
+  for (NSTextCheckingResult *item in result) {
+    NSString *imgHtml = [html substringWithRange:[item rangeAtIndex:0]];
+    
+    NSArray *tmpArray = nil;
+    if ([imgHtml rangeOfString:@"src=\""].location != NSNotFound) {
+      tmpArray = [imgHtml componentsSeparatedByString:@"src=\""];
+    } else if ([imgHtml rangeOfString:@"src="].location != NSNotFound) {
+      tmpArray = [imgHtml componentsSeparatedByString:@"src="];
+    }
+    
+    if (tmpArray.count >= 2) {
+      NSString *src = tmpArray[1];
+      
+      NSUInteger loc = [src rangeOfString:@"\""].location;
+      if (loc != NSNotFound) {
+        src = [src substringToIndex:loc];
+        
+        NSLog(@"正确解析出来的SRC为：%@", src);
+        if (src.length > 0) {
+          NSString *localPath = [docPath stringByAppendingPathComponent:[self md5:src]];
+          // 先将链接取个本地名字，且获取完整路径
+          [urlDicts setObject:localPath forKey:src];
+        }
+      }
+    }
+  }
+```
+
+下一步，我们需要将HTML中所有的原始src的url值替换成我们app的沙盒中的图片路径，如果该路径中未存在，则需要去下载图片，否则不需要重复下载。如下：
+
+```
+  // 遍历所有的URL，替换成本地的URL，并异步获取图片
+  for (NSString *src in urlDicts.allKeys) {
+    NSString *localPath = [urlDicts objectForKey:src];
+    html = [html stringByReplacingOccurrencesOfString:src withString:localPath];
+    
+    // 如果已经缓存过，就不需要重复加载了。
+    if (![[NSFileManager defaultManager] fileExistsAtPath:localPath]) {
+      [self downloadImageWithUrl:src];
+    }
+  }
+```
+
+下载图片后，还需要将图片存储到该原始url对应的本地路径，也就是Document下,其文件名为原始url的md5值，其他也就可以得出去唯一路径。这里只贴出存储代码，关于如何下载图片，查看demo。
+
+```
+NSData *data = UIImagePNGRepresentation(image);
+NSString *docPath = [NSHomeDirectory() stringByAppendingPathComponent:@"Documents"];
+
+NSString *localPath = [docPath stringByAppendingPathComponent:[self md5:src]];
+    
+if (![data writeToFile:localPath atomically:NO]) {
+   NSLog(@"写入本地失败：%@", src);
+}
+```
+
+#难点
+
+这里有几处难点：
+
+* 如何匹配`<img src="..."/>`来查找图片链接
+* 在匹配到以后，如何获取src的值
+* 在得到src的值以后，如何在iOS原生获取图片后让webview加载
+
+这里使用了正则表达式来匹配查找`<img src="..."/>`，匹配结果可能有多个，遍历数组就可以处理所有的图片链接:
+
+```
+NSRegularExpression(pattern: "<img\\ssrc[^>]*/>", options: .AllowCommentsAndWhitespace
+```
+
+#存储图片到沙盒
+
+通过获取到HTML中图片的链接后，我们需要通过ios原生的方式来发起请求，加载图片，在加载完成后，我们需要将图片存储到沙盒中document下：
+
+```
+func saveImageData(data: NSData, name: String) ->String {
+  let docPath = NSSearchPathForDirectoriesInDomains(NSSearchPathDirectory.DocumentDirectory, NSSearchPathDomainMask.UserDomainMask, true)[0] as NSString
+  
+  let path = docPath.stringByAppendingPathComponent(name)
+  
+  // 若已经缓存过，就不需要重复操作了
+  if NSFileManager.defaultManager().fileExistsAtPath(path) {
+    return path
+  }
+  
+  do {
+    try data.writeToFile(path, options: NSDataWritingOptions.DataWritingAtomic)
+  } catch {
+    print("save image data with name: \(name) error")
+  }
+  
+  return path
+}
+```
+
+#验证是否成功
+
+首先我们可以看到test.html中只有两个img标签：
+
+```
+<img src="http://www.jhjcqc.com/ueditor/php/upload/image/20151014/1444783819412910.jpg" />
+
+<img src="http://www.jhjcqc.com/ueditor/php/upload/image/20151014/1444783847836404.jpg" />
+```
+
+在我们替换路径完成后，我们加载webview，然后打印出webview所加载的HTML内容中这两个`<img>`标签的src是否变化，结果如下：
+
+```
+<img src="/Users/huangyibiao/Library/Developer/CoreSimulator/Devices/09692E07-2E79-4070-9537-CFD9F3141B0D/data/Containers/Data/Application/73F6D429-E0FD-4BD4-B0A5-85C1BD179840/Documents/5353c07f4c2ea0471b9f3ee36dedcaac" />
+
+<img src="/Users/huangyibiao/Library/Developer/CoreSimulator/Devices/09692E07-2E79-4070-9537-CFD9F3141B0D/data/Containers/Data/Application/73F6D429-E0FD-4BD4-B0A5-85C1BD179840/Documents/54edea1f2edd444aaba9d0321d786962" />
+```
+
+根据效果图，我们可以看到图片是显示出来了，这就说明替换成功后仍然可以加载出来图片，实验成功。
+
+#源代码
+
+想要下载源代码，请移步github下载，内有Swift版的工程和ObjC版的工程：<br/>
+[https://github.com/CoderJackyHuang/iOSLoadWebViewImage](https://github.com/CoderJackyHuang/iOSLoadWebViewImage)
+
+#推荐阅读
+
+* [OC JavaScriptCore与js交互](http://www.henishuo.com/oc-js/)
+* [WKWebView新特性及JS交互](http://www.henishuo.com/wkwebview-js/)
+* [Swift JavaScriptCore与JS交互](http://www.henishuo.com/swift-js/)
+
+

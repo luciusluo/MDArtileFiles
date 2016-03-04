@@ -1,0 +1,430 @@
+>#iOS多线程（NSOperation/Queue）
+
+---
+`iOS`实现多线程的方式有三种，分别是`NSThread`、`NSOperation`、`GCD`。
+
+关于`GCD`，请阅读[GCD深入浅出学习](http://www.henishuo.com/gcd-multiple-thread-learn/)
+
+#简介
+
+---
+`NSOperation`封装了需要执行的操作和执行操作所需的数据，提供了并发或非并发操作，可以设置最大并发数，取消操作等。
+
+`iOS`使用`NSOperation`的方式有两种：
+* 直接使用系统提供的两个子类：`NSInvocationOperation`和`NSBlockOperation`
+* 继承于`NSOperation`
+
+这里所说的抽象类不是真正的抽象类，不像`C++`那种纯虚函数，不能实例化。在`Ojbective-C`中是没有纯虚函数的，因此它是可以实例化的。只是由于没有提供任务接口，因此实例化了也没有意义。
+
+```
+NSOperation *op = [[NSOperation alloc] init];
+```
+
+>注意：我们不能直接使用`NSOperation`这个类，这个类相当于一个抽象类，不能直接实例化，必须重写`main`方法。
+
+#`NSOperation`基类`API`
+
+---
+下面简单说明`NSOperation`所提供的一些操作。
+
+###1.执行任务
+
+---
+`NSOperation`提供了`start`方法开启任务执行操作，`NSOperation`对象默认按***同步方式***执行,也就是在调用`start`方法的那个线程中直接执行。
+
+```
+if (!operation.isExecuting) {
+  [operation start];
+}
+```
+
+###2.判断是否是同步还是异步
+
+---
+`NSOperation`提供的`isConcurrent`可判断是同步还是异步执行。`isConcurrent`默认值为`NO`,表示操作与调用线程同步执行。不过这个方法在`7.0`之后就被废弃了，改成使用`isAsynchronous`判断了。
+
+```
+if ([UIDevice currentDevice].systemVersion.intValue >= 7.0) {
+  if (operation.isAsynchronous) {
+    NSLog(@"异步");
+  } else {
+    NSLog(@"同步");
+  }
+} else {
+  if (operation.isConcurrent) {
+    NSLog(@"异步");
+  } else {
+    NSLog(@"同步");
+  }
+}
+```
+
+###3.判断任务是否在执行中
+
+---
+`NSOperation`提供了`isExecuting`，可判断任务是否正在执行中。
+
+```
+if (!operation.isExecuting) {
+  [operation start];
+}
+```
+
+###4.判断任务是否已经准备好
+
+---
+`NSOperation`提供了`isReady`方法来获取任务是否已经为执行准备好。
+
+```
+if (!operation.isReady) {
+  [operation start];
+}
+```
+
+###5.判断任务已经已完成
+
+---
+`NSOperation`提供了`isFinished`，可判断任务是否已经执行完成。
+
+```
+if (operation.isFinished) {
+  NSLog(@"finished");
+}
+```
+
+###6.取消任务/判断任务状态
+
+`NSOperation`提供了`isCancelled`，可判断任务是否已经执行完成，而要取消任务，可调用`cancel`方法。
+
+```
+if (!operation.isCancelled) {
+	[operation cancel];
+}
+```
+
+###7.任务完成回调
+
+---
+如果我们想在一个`NSOperation`执行完毕后做一些事情，可以调用`NSOperation`的`completionBlock`属性来设置在任务完成以后我们还想做的事情。
+
+我们可以通过这种点语法设置：
+
+```
+operation.completionBlock = ^() {
+  NSLog(@"任务执行完毕");
+};
+```
+
+也可以通过中括号方式设置：
+
+```
+[operation setCompletionBlock:^{
+  NSLog(@"任务执行完毕");
+}];
+```
+
+###8.任务优先级
+
+---
+如下，`NSOperation`为我们提供了在`NSOperationQueue`调度队列中任务的优先级设置。
+
+```
+typedef NS_ENUM(NSInteger, NSOperationQueuePriority) {
+	NSOperationQueuePriorityVeryLow = -8L,
+	NSOperationQueuePriorityLow = -4L,
+	NSOperationQueuePriorityNormal = 0,
+	NSOperationQueuePriorityHigh = 4,
+	NSOperationQueuePriorityVeryHigh = 8
+};
+
+@property NSOperationQueuePriority queuePriority;
+```
+
+#`NSInvocationOperation`子类
+
+---
+`NSInvocationOperation`是继承于`NSOperation`，提供创建任务的方式是通过`selector`。
+
+```
+- (nullable instancetype)initWithTarget:(id)target selector:(SEL)sel object:(nullable id)arg;
+- (instancetype)initWithInvocation:(NSInvocation *)inv NS_DESIGNATED_INITIALIZER;
+```
+
+对于第二个初始化方法已经被废弃了，第二个初始化方法是通过运行时的方式来添加任务的，操作起来比较复杂。第一种就是很普通的方式，是很常见的`target-action`设计模式。
+
+```
+NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(updateUI) object:nil];
+// 开始执行任务(同步执行)
+[operation start];
+```
+
+调用`start`方法是同步执行的。如果要异步执行，可以放到`NSOperationQueue`队列中，它就相当于一个线程池，而且任务一旦放进去，就会按照`FIFO`的原则严格执行任务。任务放到线程池中后，是否会马上执行，是根据当前所设置的并发数量决定的。
+
+看看我们下载一个图片：
+
+```
+- (void)test1 {
+  NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self
+                                                                         selector:@selector(downloadImage:)
+                                                                           object:@"图片的URL"];
+  
+  NSOperationQueue *queue = [[NSOperationQueue alloc]init];
+  [queue addOperation:operation];
+}
+
+- (void)downloadImage:(NSString *)url {
+  NSURL *nsUrl = [NSURL URLWithString:url];
+  NSData *data = [[NSData alloc] initWithContentsOfURL:nsUrl];
+  UIImage *image = [[UIImage alloc] initWithData:data];
+  
+  dispatch_async(dispatch_get_main_queue(), ^{
+    self.imageView.image = image;
+  });
+}
+```
+
+我们需要注意，最后在更新`UI`的时候，一定要回到主线程，否则`UI`效果不会马上变化。当然，我们也可以使用别的方式回到主线程更新`UI`：
+
+```
+[self performSelectorOnMainThread:@selector(updateUI:) withObject:image waitUntilDone:YES];  
+
+- (void)updateUI:(UIImage *) image{  
+    self.imageView.image = image;  
+}  
+```
+
+#`NSBlockOperation`子类 
+
+---
+`NSBlockOperation`是直接继承于`NSOperation`的子类，它能够并发地执行一个或多个`block`对象，所有的`block`都执行完之后,操作才算真正完成。
+
+###添加任务
+
+---
+`NSBlockOperation`都是`block`任务，操作起来比较简洁一些。
+
+```
+NSBlockOperation *operation = [NSBlockOperation blockOperationWithBlock:^(){
+  NSLog(@"这是第一个任务在线程：%@执行，isMainThread: %d，isAync: %d",
+        [NSThread currentThread],
+        [NSThread isMainThread],
+        [operation isAsynchronous]);
+}];
+
+__weak typeof(operation) weakOperation = operation;
+[operation addExecutionBlock:^() {
+  NSLog(@"这是第二个任务在线程：%@执行，isMainThread: %d，isAync: %d",
+        [NSThread currentThread],
+        [NSThread isMainThread],
+        [weakOperation isAsynchronous]);
+}];
+
+[operation addExecutionBlock:^() {
+  NSLog(@"这是第三个任务在线程：%@执行，isMainThread: %d，isAync: %d",
+        [NSThread currentThread],
+        [NSThread isMainThread],
+        [weakOperation isAsynchronous]);
+}];
+
+[operation addExecutionBlock:^() {
+  NSLog(@"这是第四个任务在线程：%@执行，isMainThread: %d，isAync: %d",
+        [NSThread currentThread],
+        [NSThread isMainThread],
+        [weakOperation isAsynchronous]);
+}];
+
+// 开始执行任务
+[operation start]
+```
+
+看看打印结果：
+
+```
+2015-11-24 17:15:49.489 TestGCD[42401:3307632] 这是第一个任务在线程：<NSThread: 0x7fb369e02c30>{number = 1, name = main}执行，isMainThread: 1，isAync: 0
+2015-11-24 17:15:49.489 TestGCD[42401:3307797] 这是第二个任务在线程：<NSThread: 0x7fb369ca8880>{number = 2, name = (null)}执行，isMainThread: 0，isAync: 0
+2015-11-24 17:15:49.489 TestGCD[42401:3307809] 这是第三个任务在线程：<NSThread: 0x7fb369ca92b0>{number = 3, name = (null)}执行，isMainThread: 0，isAync: 0
+2015-11-24 17:15:49.489 TestGCD[42401:3307798] 这是第四个任务在线程：<NSThread: 0x7fb369f2acd0>{number = 4, name = (null)}执行，isMainThread: 0，isAync: 0
+```
+
+由此，我们可以看到第一个任务在主线程执行，第二、三、四个任务都是其它子线程完成的。这四个任务都是同步执行的。其中的`number`代表线程的`id`。
+
+当我们把`[operation start]`这行改成这样：
+
+```
+NSOperationQueue *queue = [[NSOperationQueue alloc] init];
+[queue addOperation:operation];
+[queue setMaxConcurrentOperationCount:2];
+```
+
+其打印结果如下：
+
+```
+2015-11-24 17:22:26.206 TestGCD[42558:3316054] 这是第三个任务在线程：<NSThread: 0x7f9000744750>{number = 4, name = (null)}执行，isMainThread: 0，isAync: 0
+2015-11-24 17:22:26.206 TestGCD[42558:3316053] 这是第一个任务在线程：<NSThread: 0x7f900061b6f0>{number = 2, name = (null)}执行，isMainThread: 0，isAync: 0
+2015-11-24 17:22:26.206 TestGCD[42558:3316055] 这是第二个任务在线程：<NSThread: 0x7f90006183b0>{number = 3, name = (null)}执行，isMainThread: 0，isAync: 0
+2015-11-24 17:22:26.206 TestGCD[42558:3316062] 这是第四个任务在线程：<NSThread: 0x7f9000609680>{number = 5, name = (null)}执行，isMainThread: 0，isAync: 0
+```
+
+由于我们设置了最大并发数量为2，因此同时能执行的任务数量最多两个。而这四个任务都不是在主线程执行的，全部放到子线程中执行了。我们发现isAync都为0，也就是说`operation`的`isAsynchronous`方法返回都是`NO`。
+
+>注意：并发与异步不是同一个概念
+
+要异步执行，可以这样：
+
+```
+[operation addExecutionBlock:^() {
+  dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+    NSLog(@"这是第四个任务在线程：%@执行，isMainThread: %d",
+          [NSThread currentThread],
+          [NSThread isMainThread]);
+  });
+}];
+```
+
+#自定义NSOperation
+
+---
+如果`NSInvocationOperation`和`NSBlockOperation`对象不能满足需求, 我们可以直接继承`NSOperation`, 并添加额外的功能。继承所需的工作量主要取决于你要实现非并发还是并发的`NSOperation`。定义非并发的`NSOperation`要简单许多,只需要重载`-main`这个方法，在这个方法里面执行主任务,并正确地响应取消事件; 对于并发`NSOperation`, 必须重写`NSOperation`的多个基本方法进行实现。
+
+###非并发自定义NSOperation
+我们定义一个图片下载类来说明如何自定义非并发的`NSOperation`：
+
+```
+typedef void(^HYBDownloadReponse)(UIImage *image);
+/*!
+ *  @author 黄仪标, 15-11-24 22:11:50
+ *
+ *  下载operation
+ */
+@interface DownloadOperation : NSOperation
+
+@property (nonatomic, copy) NSString *url;
+@property (nonatomic, copy) HYBDownloadReponse responseBlock;
+
+- (instancetype)initWithUrl:(NSString *)url completion:(HYBDownloadReponse)completion;
+
+@end
+```
+
+下面看看实现方法怎么实现的，关键点在于`-main`方法：
+
+```
+//
+//  DownloadOperation.m
+//  TestGCD
+//
+//  Created by huangyibiao on 15/11/24.
+//  Copyright © 2015年 huangyibiao. All rights reserved.
+//
+
+#import "DownloadOperation.h"
+
+@implementation DownloadOperation
+
+- (instancetype)initWithUrl:(NSString *)url completion:(HYBDownloadReponse)completion {
+  if (self = [super init]) {
+    self.url = url;
+    self.responseBlock = completion;
+  }
+  
+  return self;
+}
+
+// 必须重写这个主方法
+- (void)main {
+  // 新建一个自动释放池，如果是异步执行操作，那么将无法访问到主线程的自动释放池
+  @autoreleasepool {
+    // 如果刚进来，就已经被取消了，则直接退出
+    if (self.isCancelled) {
+      return;
+    }
+    
+    // 获取图片数据
+    NSURL *url = [NSURL URLWithString:self.url];
+    NSData *imageData = [NSData dataWithContentsOfURL:url];
+    
+    // 被取消，也有可能发生在获取数据后
+    if (self.isCancelled) {
+      url = nil;
+      imageData = nil;
+      return;
+    }
+    
+    UIImage *image = [UIImage imageWithData:imageData];
+    
+    // 被取消，也可能发生在转换的地方
+    if (self.isCancelled) {
+      image = nil;
+      return;
+    }
+    
+    if (self.responseBlock) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        self.responseBlock(image);
+      });
+    }
+  }
+}
+
+@end
+```
+
+我们测试一下并发：
+
+```
+DownloadOperation *operation = [[DownloadOperation alloc] initWithUrl:@"https://mmbiz.qlogo.cn/mmbiz/sia5QxFVcFD0wkCgnmf6DVxI6fVewNS8rhtZb71v2DMpDy8jIdtviaetzicwQzTEoKKyHAN96Beibk2G61tZpezQ0Q/0?wx_fmt=png" completion:^(UIImage *image) {
+    self.imageView.image = image;
+    NSLog(@"fisrt");
+  }];
+  DownloadOperation *operation1 = [[DownloadOperation alloc] initWithUrl:@"https://mmbiz.qlogo.cn/mmbiz/sia5QxFVcFD0wkCgnmf6DVxI6fVewNS8rhtZb71v2DMpDy8jIdtviaetzicwQzTEoKKyHAN96Beibk2G61tZpezQ0Q/0?wx_fmt=png" completion:^(UIImage *image) {
+    self.imageView1.image = image;
+    NSLog(@"second");
+  }];
+  DownloadOperation *operation2 = [[DownloadOperation alloc] initWithUrl:@"https://mmbiz.qlogo.cn/mmbiz/sia5QxFVcFD0wkCgnmf6DVxI6fVewNS8rhtZb71v2DMpDy8jIdtviaetzicwQzTEoKKyHAN96Beibk2G61tZpezQ0Q/0?wx_fmt=png" completion:^(UIImage *image) {
+    self.imageView2.image = image;
+    NSLog(@"third");
+  }];
+  DownloadOperation *operation3 = [[DownloadOperation alloc] initWithUrl:@"https://mmbiz.qlogo.cn/mmbiz/sia5QxFVcFD0wkCgnmf6DVxI6fVewNS8rhtZb71v2DMpDy8jIdtviaetzicwQzTEoKKyHAN96Beibk2G61tZpezQ0Q/0?wx_fmt=png" completion:^(UIImage *image) {
+    self.imageView3.image = image;
+    NSLog(@"fourth");
+  }];
+  DownloadOperation *operation4 = [[DownloadOperation alloc] initWithUrl:@"https://mmbiz.qlogo.cn/mmbiz/sia5QxFVcFD0wkCgnmf6DVxI6fVewNS8rhtZb71v2DMpDy8jIdtviaetzicwQzTEoKKyHAN96Beibk2G61tZpezQ0Q/0?wx_fmt=png" completion:^(UIImage *image) {
+    self.imageView4.image = image;
+    NSLog(@"fifth");
+  }];
+
+  NSOperationQueue *queue = [[NSOperationQueue alloc]init];
+  [queue addOperation:operation];
+  [queue addOperation:operation1];
+  [queue addOperation:operation2];
+  [queue addOperation:operation3];
+  [queue addOperation:operation4];
+  [queue setMaxConcurrentOperationCount:2];
+```
+
+效果如下：
+
+![image](http://www.henishuo.com/wp-content/uploads/2015/11/B5D8F700-7184-45B5-B1EB-5CAF18C18760.jpg)
+
+打印结果：
+
+```
+2015-11-24 23:12:49.886 TestGCD[64003:3791254] second
+2015-11-24 23:12:49.887 TestGCD[64003:3791254] fisrt
+2015-11-24 23:12:49.895 TestGCD[64003:3791254] fifth
+2015-11-24 23:12:49.996 TestGCD[64003:3791254] fourth
+2015-11-24 23:12:50.005 TestGCD[64003:3791254] third
+```
+
+我们发现其顺序并不是按添加的顺序先执行完成的，因为是并发的。
+
+#结尾
+
+---
+关于这个`NSOperation`常用的也就这些了吧，其它所谓高深的，就让那些大牛们去研究吧，对于我们这些小菜鸟，对工作够用就可以了！！！
+
+#关注我
+
+---
+**微信公众号：[iOSDevShares]()**<br>
+**有问必答QQ群：324400294**
