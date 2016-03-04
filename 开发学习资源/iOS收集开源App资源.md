@@ -7,6 +7,20 @@ iOS开发学习者都希望得到实战训练，但是很多资料都是只有�
 
 # 完整项目
 
+ * [IOS-Swift2.0 高仿半糖App](https://github.com/jiachenmu/Swift-BanTang) 这个开源项目为半糖，官网➡,类似于美丽说，一款电商App，使用语言:Swift2.0,开发工具: Xcode 7.1,纯代码开发,耗时两个多月，数据为本地数据，用Charles进行抓包
+ * [OSChina iPhone版](https://git.oschina.net/oschina/iphone-app)
+ * [Git@OSC iPhone](http://git.oschina.net/oschina/git-osc-iphone)
+ * [zulip-ios](https://github.com/zulip/zulip-ios) Dropbox收购公司内部社交服务商Zulip,然后全部开源，这是iOS App
+ * [SegmentFault](https://github.com/gaosboy/iOSSF) 
+ * [Reddit](https://github.com/reddit/iReddit)
+ * [RSSRead](https://github.com/ming1016/RSSRead)
+ * [Anypic](https://github.com/ParsePlatform/Anypic)  类似于Instagram的一款App
+ * [NotificationChat](https://github.com/relatedcode/EncryptedChat) Objective-C写的完整的聊天应用
+ * [豆瓣妹子图iOS客户端](https://github.com/Sunnyyoung/Meizi)
+ * [manong-reading](https://github.com/icepy/manong-reading) 《猿已阅》码农周刊iOS客户端
+ * [Brushes](https://github.com/sprang/Brushes) 绘图应用. Painting app for the iPhone and iPad.
+ * [WordPress for iOS](https://github.com/wordpress-mobile/WordPress-iOS) 
+ * [VLC for iOS](http://www.videolan.org/vlc/download-ios.html)
  * [Phonetic](https://github.com/iAugux/Phonetic) Swift 写的一个 iOS 版的 Phonetic Contacts，功能很多，其中昵称功能非常实用，已在 GitHub 开源并上架 App Store
  * [v2ex](https://github.com/singro/v2ex) - v2ex 的客户端，新闻、论坛。
  * [iBBS-Swift](https://github.com/iAugux/iBBS-Swift) - “新手开源一个用Swift（2.0）写的论坛客户端”。[BBS 服务端](http://obbs.sinaapp.com/)。 
