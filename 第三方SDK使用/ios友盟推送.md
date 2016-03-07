@@ -1,7 +1,12 @@
->#iOS友盟推送
----
+#序言
+
+这里是很久以前封装的一个小工具类，现在搬到本博客里。这里没有详细教你如何插入友盟推送的教程，只是直接将原来在某小公司里所做的项目需要到集成时，写了一个demo，这里公开给大家而已。
+
+#注册
 
 友盟推送官网：[http://www.umeng.com/push](http://www.umeng.com/push)
+
+#注意事项
 
 友盟推送中，有一个问题，那就是应用处于前台时接收到的推送消息如何显示的问题。
 友盟提供了默认的显示框，但是样式不是我们想要的，因此友盟也提供了用户自定义显示框的功能，
@@ -12,6 +17,8 @@
 // 所以这里根据需要来处理是否屏掉此功能
 [UMessage sendClickReportForRemoteNotification:[HYBUMessageHelper shared].userInfo];
 ```
+
+#如何封装
 
 下面是我所封装的友盟推送工具类：
 
@@ -195,6 +202,8 @@
 @end
 ```
 
+#测试使用
+
 下面是测试代码：
 
 ```
@@ -257,13 +266,13 @@
 @end
 ```
 
+#最后
 
-#Good luck!
-
----
 接下来就需要去官网发通知测试一下，在发通知之前，需要先注册设备，否则在开发环境下，是不会有设备收到信息的。
 
 #源代码
 
----
-请到`github`下载：[https://github.com/CoderJackyHuang/UMAnalyticsDemo](https://github.com/CoderJackyHuang/UMAnalyticsDemo)
+之前一直给了错误的链接，原来给的是友盟统一的demo的链接，这里已经更正过来了！
+
+请到`github`下载：[CoderJackyHuang：UMessageDemo_Push](https://github.com/CoderJackyHuang/UMessageDemo_Push)
+

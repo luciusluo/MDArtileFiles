@@ -1,23 +1,21 @@
->#iOS Socket编程-C语言版（UDP）
-
----
+#序言
 
 本篇文章为总结使用`C`语言的`api`来完成`UDP`通信的基本功能，如果您对`Socket`不了解，请先阅读上一篇理论知识：
 
-[iOS Socket理论知识](http://www.henishuo.com/ios-socket-theory/)
+* [iOS Socket理论知识](http://www.henishuo.com/ios-socket-theory/)
+
+如果想学习TCP的，请阅读：
+
+* [iOS Socket之C语言版TCP](http://www.henishuo.com/ios-socket-tcp-c-version/)
 
 如果文章中有任何您认为不正确的或者有疑问的，请联系笔者！
 
-**谢谢！**
-
->#支持原创，请[阅读原文](http://www.henishuo.com/ios-socket-udp-c-version/)
-
 #1. UDP Socket编程
 
----
+
 先讲一讲`UDP`编程，因为比`TCP`要简单多了。首先，我们需要明白`UDP`是用户数据报协议，英文名为***User Datagram Protocol***，它是面向无连接的。
 
->注意：`Socket`通信一定有要服务端和客户端。
+**注意：**`Socket`通信一定有要服务端和客户端。
 
 ##1.1 UDP Socket客户端
 
@@ -25,10 +23,10 @@
 
 笔者这里分成了四步：
 
-1. 第一步：创建`socket`并配置`socket`，如服务端`ip`地址和端口号
-2. 第二步：调用`sendto`发送消息到服务器端
-3. 第三步：调用`recvfrom`接收来自服务器端的消息
-4. 第四步：调用`close`关闭`socket`
+* 第一步：创建`socket`并配置`socket`，如服务端`ip`地址和端口号
+* 第二步：调用`sendto`发送消息到服务器端
+* 第三步：调用`recvfrom`接收来自服务器端的消息
+* 第四步：调用`close`关闭`socket`
 
 ###1.1.1 客户端的代码实现：
 
@@ -117,11 +115,11 @@
 
 笔者这里分成了五步：
 
-1. 第一步：创建`socket`并配置`socket`
-2. 第二步：调用`bind`绑定服务器本机ip及端口号
-3. 第三步：调用`recvfrom`接收来自客户端的消息
-4. 第四步：调用`sendto`将接收到服务器端的信息返回给客户端
-5. 第四步：调用`close`关闭`socket`
+* 第一步：创建`socket`并配置`socket`
+* 第二步：调用`bind`绑定服务器本机ip及端口号
+* 第三步：调用`recvfrom`接收来自客户端的消息
+* 第四步：调用`sendto`将接收到服务器端的信息返回给客户端
+* 第四步：调用`close`关闭`socket`
 
 
 ###1.2.1 服务器端代码实现
@@ -207,14 +205,6 @@
 
 #源代码
 
----
-
 小伙伴们，可以到github下载了：[https://github.com/CoderJackyHuang/iOS-Socket-C-Version](https://github.com/CoderJackyHuang/iOS-Socket-C-Version)
 
->注意：这里面有两个工程，一个是客户端，一个是服务器端。运行时，先运行服务器端，然后再选择客户端。另外，客户端所指定的服务器端的ip地址一定要修改成您本机对应的ip，不然使用笔者这里的ip就会失败。
-
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/)**
+**注意**：这里面有两个工程，一个是客户端，一个是服务器端。运行时，先运行服务器端，然后再选择客户端。另外，客户端所指定的服务器端的ip地址一定要修改成您本机对应的ip，不然使用笔者这里的ip就会失败。

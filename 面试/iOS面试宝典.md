@@ -25,6 +25,7 @@
 * **[iOS笔试题基础部分](http://www.henishuo.com/ios-base-writing-in-test/)**
 * **[宝库iOS开发笔试题](http://www.henishuo.com/ios-baoku-interview-questions/)**
 * **[要出发公司iOS笔试题](http://www.henishuo.com/ios-needgo-interview/)**
+* **[iOS中高级笔试题一](http://www.henishuo.com/ios-middle-interview-one/)**
 * **[iOS中高级笔试题二](http://www.henishuo.com/ios-middle-hight-interview-two/)**
 
 ##第二关：面试题

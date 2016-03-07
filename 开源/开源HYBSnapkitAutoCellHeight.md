@@ -61,39 +61,57 @@ public var hyb_bottomOffsetToCell: CGFloat? {
 
 ```
 /**
- 唯一的类方法，用于计算行高
+ 带缓存功能、自动计算行高
  
- - parameter indexPath:	index path
- - parameter config:		在config中调用配置数据方法等
+ - parameter tableView:					给哪个tableview缓存
+ - parameter config:						在回调中配置数据
+ - parameter cache:							指定缓存key/stateKey/tableview
+ - parameter stateKey:					stateKey表示状态key
+ - parameter shouldUpdate       是否要更新指定stateKey中缓存高度，若为YES,不管有没有缓存 ，都会重新计算
  
- - returns: 所计算得到的行高
+ - returns: 行高
  */
-public class func hyb_cellHeight(forIndexPath indexPath: NSIndexPath, config: ((cell: UITableViewCell) -> Void)?) -> CGFloat {
-  let cell = self.init(style: .Default, reuseIdentifier: nil)
-  
-  if let block = config {
-    block(cell: cell);
-  }
-  
-  return cell.hyb_calculateCellHeight(forIndexPath: indexPath)
+public class func hyb_cellHeight(forTableView tableView: UITableView,
+  config: ((cell: UITableViewCell) -> Void)?,
+  updateCacheIfNeeded cache: ((Void) -> (key: String, stateKey: String, shouldUpdate: Bool))?) -> CGFloat {
+    
+    if let cacheBlock = cache {
+      let keyGroup = cacheBlock()
+      let key = keyGroup.key
+      let stateKey = keyGroup.stateKey
+      let shouldUpdate = keyGroup.shouldUpdate;
+      
+      if shouldUpdate == false {
+        if  let cacheDict = tableView.hyb_cacheHeightDictionary {
+          // 状态高度缓存
+          if let stateDict = cacheDict[key] as? NSMutableDictionary {
+            if let height = stateDict[stateKey] as? NSNumber {
+              if height.intValue != 0 {
+                return CGFloat(height.floatValue)
+              }
+            }
+          }
+        }
+      }
+    }
+    
+    let className = String(UTF8String: class_getName(self));
+    var cell = tableView.hyb_cacheCellDictionary?.objectForKey(className!) as? UITableViewCell;
+    
+    if cell == nil {
+      cell = self.init(style: .Default, reuseIdentifier: nil)
+      tableView.hyb_cacheCellDictionary?.setObject(cell!, forKey: className!);
+    }
+    
+    if let block = config {
+      block(cell: cell!);
+    }
+    
+    return cell!.hyb_calculateCellHeight(forTableView: tableView, updateCacheIfNeeded: cache)
 }
 ```
 
-比如，在demo中我们这样调用的：
-
-```
-// MARK: UITableViewDelegate
-func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-  let model = self.dataSource[indexPath.row]
-  
-  return TestCell.hyb_cellHeight(forIndexPath: indexPath, config: { (cell) -> Void in
-    let itemCell = cell as? TestCell
-    itemCell?.config(testModel: model)
-  })
-}
-```
-
-是不是非常简单呢？这样就不用担心行高的问题了。之前我所有的项目中都是使用自己封装的OC版本基于Masonry写的扩展，很好用的哦！
+这里采用了高度缓存且对于所用于计算地cell只会创建一次，因此性能上通常还是很不错的。
 
 #如何在cell中自动布局
 
@@ -230,14 +248,7 @@ func config(testModel model: TestModel) {
 }
 ```
 
-#Version 1.0
-
-* 扩展UITableViewCell，增加自动计算行高的扩展API
-
-#Version 1.1
-
-* 扩展UITableView，增加对指定tableview的对应的model数据高度缓存
-* 增加可缓存高度的API，调用方式如下：
+#如何调用计算行高
 
 ```
 // MARK: UITableViewDelegate
@@ -255,38 +266,22 @@ func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSInde
     stateKey = "unexpand1&expand2"
   }
   
-  return TestCell.hyb_cellHeight(forIndexPath: indexPath, config: { (cell) -> Void in
+  return TestCell.hyb_cellHeight(forTableView: tableView, config: { (cell) -> Void in
     let itemCell = cell as? TestCell
-          itemCell?.config(testModel: model)
-    }, cache: { () -> (key: String, stateKey: String, cacheForTableView: UITableView) in
-      return (String(model.modelId), stateKey, tableView)
+    itemCell?.config(testModel: model)
+    }, updateCacheIfNeeded: { () -> (key: String, stateKey: String, shouldUpdate: Bool) in
+      return (String(model.modelId), stateKey, false)
   })
 }
 ```
 
-其中，cache闭包要求返回一个元组，指定key,stateKey,tableview，且key必须保证唯一，对应使用model的id作为key。而stateKey是用于存储/获取不同状态下的model对应的数据就有的高度。最后，tableview是给哪个tableview缓存。当tableview被释放了，缓存数据也会随着自动被释放掉。
+其中，cache闭包要求返回一个元组，指定key,stateKey,tableview，且key必须保证唯一，对应使用model的id作为key。而stateKey是用于存储/获取不同状态下的model对应的数据就有的高度。
 
-#version 1.1.2
+#version 2.0.0
 
-* 新增对某种状态更新缓存的API。主要是对于像QQ空间里的说说这样，在评论中增加一条评论，其高度也会变化，因此需要更新缓存。
+本版本是一个大的版本，API删除了不缓存和无更新的API，只保留最简单的API，方便大家使用。
 
-```
-/**
-带缓存功能、自动计算行高
-   
-- parameter indexPath:					index path
-- parameter config:						在回调中配置数据
-- parameter cache:							指定缓存key/stateKey/tableview
-- parameter stateKey:					stateKey表示状态key
-- parameter shouldUpdate       是否要更新指定stateKey中缓存高度，若为YES,不管有没有缓存 ，都会重新计算
-- parameter cacheForTableView: 指定给哪个tableview缓存
-   
-- returns: 行高
-*/
-public class func hyb_cellHeight(forIndexPath indexPath: NSIndexPath,
-config: ((cell: UITableViewCell) -> Void)?,
-updateCacheIfNeeded cache: ((Void) -> (key: String, stateKey: String, shouldUpdate: Bool, cacheForTableView: UITableView))?) -> CGFloat 
-```
+本版本升级主要是提升性能，将计算的cell重用，以提高性能。
 
 #最后
 
@@ -297,34 +292,14 @@ updateCacheIfNeeded cache: ((Void) -> (key: String, stateKey: String, shouldUpda
 支持cocoapods，大家可以通过下面的命令放到Podfile中：
 
 ```
-pod 'HYBSnapkitAutoCellHeight', '~> 1.1.2'
+pod 'HYBSnapkitAutoCellHeight', '~> 2.0.0'
 ```
 
 或者直接到GITHUB下载源代码，将HYBSnapkitAutoCellHeight文件夹放到工程中：[HYBSnapkitAutoCellHeight开源](https://github.com/CoderJackyHuang/HYBSnapkitAutoCellHeight)
 
-#看Objective-C版
+#推荐阅读
 
-笔者提供了Objective-C基于Masonry扩展的版本：[开源HYBMasonryAutoCellHeight自动计算行高](http://www.henishuo.com/masonry-cell-height-auto-calculate/)
-
-#关注我
+* Objective-C基于Masonry扩展的版本：[开源HYBMasonryAutoCellHeight自动计算行高](http://www.henishuo.com/masonry-cell-height-auto-calculate/)
 
 
-如果在使用过程中遇到问题，或者想要与我交流，可加入有问必答**QQ群：[324400294]()**
 
-关注微信公众号：[**iOSDevShares**]()
-
-关注新浪微博账号：[标哥Jacky](http://weibo.com/u/5384637337)
-
-标哥的GITHUB地址：[CoderJackyHuang](https://github.com/CoderJackyHuang)
-
-**[原文出自：标哥的技术博客](http://www.henishuo.com/snapkit-auto-cell-height/)**
-
-
-#支持并捐助
-
-
-如果您觉得文章对您很有帮忙，希望得到您的支持。您的捐肋将会给予我最大的鼓励，感谢您的支持！
-
-支付宝捐助      | 微信捐助
-------------- | -------------
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/alipay-e1451124478416.jpg) | ![image](http://www.henishuo.com/wp-content/uploads/2015/12/weixin.jpg)

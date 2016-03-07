@@ -7,16 +7,17 @@ iOS开发学习者都希望得到实战训练，但是很多资料都是只有�
 
 # 完整项目
 
+ * [zhihuDaily](https://github.com/beyanger/zhihuDaily) 高防知乎日报
  * [IOS-Swift2.0 高仿半糖App](https://github.com/jiachenmu/Swift-BanTang) 这个开源项目为半糖，官网➡,类似于美丽说，一款电商App，使用语言:Swift2.0,开发工具: Xcode 7.1,纯代码开发,耗时两个多月，数据为本地数据，用Charles进行抓包
- * [OSChina iPhone版](https://git.oschina.net/oschina/iphone-app)
- * [Git@OSC iPhone](http://git.oschina.net/oschina/git-osc-iphone)
+ * [OSChina iPhone版](https://git.oschina.net/oschina/iphone-app) OSChina ios版
+ * [Git@OSC iPhone](http://git.oschina.net/oschina/git-osc-iphone) iphone版
  * [zulip-ios](https://github.com/zulip/zulip-ios) Dropbox收购公司内部社交服务商Zulip,然后全部开源，这是iOS App
- * [SegmentFault](https://github.com/gaosboy/iOSSF) 
- * [Reddit](https://github.com/reddit/iReddit)
- * [RSSRead](https://github.com/ming1016/RSSRead)
+ * [SegmentFault](https://github.com/gaosboy/iOSSF) segment fault开源的ios版
+ * [Reddit](https://github.com/reddit/iReddit) 
+ * [RSSRead](https://github.com/ming1016/RSSRead) 开源的RSS ios app
  * [Anypic](https://github.com/ParsePlatform/Anypic)  类似于Instagram的一款App
  * [NotificationChat](https://github.com/relatedcode/EncryptedChat) Objective-C写的完整的聊天应用
- * [豆瓣妹子图iOS客户端](https://github.com/Sunnyyoung/Meizi)
+ * [豆瓣妹子图iOS客户端](https://github.com/Sunnyyoung/Meizi) 豆瓣妹子图iOS客户端
  * [manong-reading](https://github.com/icepy/manong-reading) 《猿已阅》码农周刊iOS客户端
  * [Brushes](https://github.com/sprang/Brushes) 绘图应用. Painting app for the iPhone and iPad.
  * [WordPress for iOS](https://github.com/wordpress-mobile/WordPress-iOS) 
@@ -73,17 +74,4 @@ iOS开发学习者都希望得到实战训练，但是很多资料都是只有�
 
 本篇文章持续更新中，请持续关注。本篇所收集的内容来源于四面八方，若大家看到好的资源，欢迎在评论中提出，笔者会整理至文章中，谢谢！
 
-
-#关注我
-
-
-关注                | 账号              | 备注
--------------      | -------------     | ----------------
-Swift/ObjC技术群一  | 324400294         |  群一若已满，请申请群二
-Swift/ObjC技术群二  | 494669518         | 群二若已满，请申请群三
-Swift/ObjC技术群三  | 461252383         | 群三若已满，会有提示信息
-关注微信公众号       | iOSDevShares      | 关注微信公众号，会定期地推送好文章
-关注新浪微博账号      |  [标哥Jacky](http://weibo.com/u/5384637337) | 关注微博，每次发布文章都会分享到新浪微博
-关注标哥的GitHub     | [CoderJackyHuang](https://github.com/CoderJackyHuang) | 这里有很多的Demo和开源组件
-关于我               | [进一步了解标哥](http://www.henishuo.com/about-biaoge/) | 如果觉得文章对您很有帮助，可捐助我！
 

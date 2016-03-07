@@ -1,27 +1,23 @@
->#iOS Socket编程-C语言版（TCP）
-
----
+#序言
 
 本篇文章为总结使用`C`语言的`api`来完成`TCP`通信的基本功能，如果您对`Socket`不了解，请先阅读上一篇理论知识：
 
-[iOS Socket理论知识](http://www.henishuo.com/ios-socket-theory/)
+* [iOS Socket理论知识](http://www.henishuo.com/ios-socket-theory/)
 
-如果您还想学习`UDP`编程，请阅读[iOS Socket编程-C语言版(UDP)](http://www.henishuo.com/ios-socket-udp-c-version/)
+如果您还想学习`UDP`编程，请阅读：
+
+* [iOS Socket编程-C语言版(UDP)](http://www.henishuo.com/ios-socket-udp-c-version/)
 
 如果文章中有任何您认为不正确的或者有疑问的，请联系笔者！
 
-**谢谢！**
-
->#支持原创，请[阅读原文](http://www.henishuo.com/ios-socket-tcp-c-version/)
-
 #1. TCP Socket编程
 
----
+
 `TCP`是面向连接的，安全可靠的传输层协议。`TCP`的程序基本框架设计图：
 
 ![image](http://www.coderyi.com//qiniu/429/image/5269612b25e6df1b3ee5ab8352b2c3b6.jpg)
 
->注意：`Socket`通信一定有要服务端和客户端。
+**注意：**`Socket`通信一定有要服务端和客户端。
 
 ##1.1 TCP Socket客户端
 
@@ -29,12 +25,12 @@
 
 笔者这里分成了六步：
 
-1. 第一步：创建`socket`并配置`socket`
-2. 第二步：调用`bind`绑定监听ip和端口号
-3. 第三步：调用`connect`连接服务器
-4. 第四步：调用`getsockname`获取套接字信息
-5. 第五步：调用`send`发送消息到服务器端
-6. 第六步：调用`close`关闭`socket`
+*   第一步：创建`socket`并配置`socket`
+*   第二步：调用`bind`绑定监听ip和端口号
+*   第三步：调用`connect`连接服务器
+*   第四步：调用`getsockname`获取套接字信息
+*   第五步：调用`send`发送消息到服务器端
+*   第六步：调用`close`关闭`socket`
 
 这里没有写接收来自服务器端的消息，大家可以自行添加。
 
@@ -136,13 +132,12 @@
 
 笔者这里分成了五步：
 
-1. 第一步：创建`socket`并配置`socket`
-2. 第二步：调用`bind`绑定服务器本机ip及端口号
-3. 第三步：调用`listen`监听客户端的连接，并指定同时最多可让`accept`的数量 
-4. 第四步：调用`accept`等待客户端的连接
-5. 第五步：调用`recvfrom`接收来自客户端的消息
-6. 第六步：调用`close`关闭`socket`
-
+* 第一步：创建`socket`并配置`socket`
+* 第二步：调用`bind`绑定服务器本机ip及端口号
+* 第三步：调用`listen`监听客户端的连接，并指定同时最多可让`accept`的数量 
+* 第四步：调用`accept`等待客户端的连接
+* 第五步：调用`recvfrom`接收来自客户端的消息
+* 第六步：调用`close`关闭`socket`
 
 ###1.2.1 服务器端代码实现
 
@@ -258,14 +253,7 @@
 
 #源代码
 
----
-
 小伙伴们，可以到github下载了：[https://github.com/CoderJackyHuang/iOS-Socket-C-Version](https://github.com/CoderJackyHuang/iOS-Socket-C-Version)
 
->注意：这里面有两个工程，一个是客户端，一个是服务器端。运行时，先运行服务器端，然后再选择客户端。另外，客户端所指定的服务器端的ip地址一定要修改成您本机对应的ip，不然使用笔者这里的ip就会失败。
+**注意：**这里面有两个工程，一个是客户端，一个是服务器端。运行时，先运行服务器端，然后再选择客户端。另外，客户端所指定的服务器端的ip地址一定要修改成您本机对应的ip，不然使用笔者这里的ip就会失败。
 
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/)**
