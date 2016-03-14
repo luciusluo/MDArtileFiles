@@ -36,7 +36,7 @@ Shows blended view layers. Multiple view layers that are drawn on top of each ot
 
 ![image](http://www.henishuo.com/wp-content/uploads/2016/03/QQ20160305-1@2x-e1457153005355.png)
 
-优化后，我们看到没有中文标签变成绿色了，而有中文的标签还是混合后的颜色。关于有中文的标签如何去优化，这个问题现在没有办法，如果大家有什么好的方法，请一定要告诉笔者，成分感谢！
+优化后，我们看到没有中文标签变成绿色了，而有中文的标签还是混合后的颜色。关于有中文的标签如何去优化，这个问题现在没有办法，如果大家有什么好的方法，请一定要告诉笔者，成分感谢！(补充：已经找到解决办法，看文章末尾)
 
 #优化的代码
 
@@ -90,6 +90,27 @@ self.titleLabel.backgroundColor = self.contentView.backgroundColor;
 
 我们尝试设置opaque、alpha都会是图层混合，因此最关键的还是backgroundColor这一关键属性。
 
+#UILabel中文会变红的解决方案
+
+在微博发出来后，终于有高人指出原因。虽然设置了背景色，但在iOS8及其以上版本，用UILabel显示中文却出现了像素混合的情况，这是为什么呢？我们来看看UILabel在iOS8前后的变化。
+
+* 在iOS8以前的版本：UILabel使用的是CALayer作为底图层
+* 在iOS8及其以上版本：UILabel的底图层变成了\_UILabelLayer，绘制文本也有所改变
+
+我们可以通过打印日志可以看到这个\_UILabelLayer。
+
+那么如何解决呢？我们仔细地看一看那个UILabel变红区域，我们发现文字并不是紧紧地靠着边界，而是与边界有一定的距离，其实这是超出了显示的内容的范围，从而引起了像素混合。
+
+![image](http://www.henishuo.com/wp-content/uploads/2016/03/QQ20160308-0@2x.png)
+
+看到标签显示中文也变成绿色了吗？哈哈，这是因为添加了一行代码而解决的。将UILabel沿着bounds来裁剪，这样就不会超出来了，问题也就解决了：
+
+```
+self.descLabel.layer.maskToBounds = YES;
+```
+
+不过在iOS8之前，我们不用设置它的。更详细地请看后面的参考列表。
+
 #最后
 
 上面讲的只是UILabel的，但是实际开发中还会有很多的控件的，那么我们也要注意处理。这里只是抛砖引玉，希望得到大家的评论，分别提出更多更好的方法。
@@ -117,4 +138,6 @@ GITHUB下载地址：[CoderJackyHuang's PerformanceDemo](https://github.com/Code
 
 * [UIKit性能调优实战讲解](http://www.jianshu.com/p/619cf14640f3)
 * [iOS图形性能](http://www.cocoachina.com/ios/20150429/11712.html)
+* [UILabel在iOS8下的Color Blended Layers](http://www.jianshu.com/p/db6602413fa3)
+
 

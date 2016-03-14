@@ -1,5 +1,3 @@
->#[原文出自：标哥的技术博客](http://www.henishuo.com/runtime-base-theory/)
-
 #前言
 
 
@@ -18,19 +16,19 @@
 2. 通过`Foundation`库中定义的`NSObject`提供的方法
 3. 通过直接调用`runtime`方法
 
-##通过Objective-C源代码
+###通过Objective-C源代码
 
 在大多数的部分，运行时系统会自动运行并在后台运行。我们使用它只是写源代码并编译源代码。当编译包含`Objective-C`类和方法的代码时，编译器会创建实现了语言动态特性的数据结构和函数调用。该数据结构捕获在类、扩展和协议中所定义的信息。
 
 最重要的`runtime`函数是发消息函数，在编译时，编译器会转换成类似`objc_msgSend`这样的发送消息的函数。因此，我们通过写好源代码，编译器会自动帮助我们编译成`runtime`代码。
 
-##通过NSObject提供的方法
+###通过NSObject提供的方法
 
 在`Cocoa`编程中，大部分的类都继承于`NSObject`，也就是说`NSObject`通常是根类，大部分的类都继承于`NSObject`。有些特殊的情况下，`NSObject`只是提供了它应该要做什么的模板，却没有提供所有必须的代码。
 
 有些`NSObject`提供的方法仅仅是为了查询运动时系统的相关信息，这此方法都可以反查自己。比如`-isKindOfClass:`和`-isMemberOfClass:`都是用于查询在继承体系中的位置。`-respondsToSelector:`指明是否接受特定的消息。`+conformsToProtocol:`指明是否要求实现在指定的协议中声明的方法。`-methodForSelector:`提供方法实现的地址。
 
-##通过直接调用runtime函数
+###通过直接调用runtime函数
 
 `runtime`库函数在`usr/include/objc`目录下，我们主要关注是这两个头文件：
 
@@ -70,10 +68,10 @@ When it encounters a method call, the compiler generates a call to one of the
 
 也就是说，我们是通过编译器来自动转换成运行时代码时，它会根据类型自动转换成下面的其它一个函数：
 
-* objc_msgSend：其它普通的消息都会通过该函数来发送
-* objc_msgSend_stret：消息中需要有数据结构作为返回值时，会通过该函数来发送消息并接收返回值
-* objc_msgSendSuper：与objc_msgSend函数类似，只是它把消息发送给父类实例
-* objc_msgSendSuper_stret：与objc_msgSend_stret函数类似，只是它把消息发送给父类实例并接收数组结构作为返回值
+* objc\_msgSend：其它普通的消息都会通过该函数来发送
+* objc\_msgSend\_stret：消息中需要有数据结构作为返回值时，会通过该函数来发送消息并接收返回值
+* objc\_msgSendSuper：与objc\_msgSend函数类似，只是它把消息发送给父类实例
+* objc\_msgSendSuper\_stret：与objc\_msgSend\_stret函数类似，只是它把消息发送给父类实例并接收数组结构作为返回值
 
 另外，如果函数返回值是浮点类型，官方说明如下：
 
@@ -87,6 +85,8 @@ When it encounters a method call, the compiler generates a call to one of the
  * x86-64: objc_msgSend_fp2ret used for `_Complex long double`.
 ```
 其实这是一个条件编译，我们不用担心是哪种处理器上，我们只需要调用`objc_msgSend_fpret`函数即可。
+
+**注意事项：**一定要调用所调用的API支持哪些平台，乱调在导致部分平台上不支持而崩溃的。
 
 当消息被发送到实例对象时，它是如何处理的：
 
@@ -103,7 +103,7 @@ When it encounters a method call, the compiler generates a call to one of the
 
 ![image](http://www.henishuo.com/wp-content/uploads/2015/12/inherit.png)
 
->所有元类中的`isa`指针都指向根元类，而根元类的`isa`指针则指向自身。根元类是继承于根类的，与根类的结构体成员一致，都是`objc_class`结构体，不同的是根元类的`isa`指针指向自身，而根类的`isa`指针为`nil`
+所有元类中的`isa`指针都指向根元类，而根元类的`isa`指针则指向自身。根元类是继承于根类的，与根类的结构体成员一致，都是objc\_class结构体，不同的是根元类的`isa`指针指向自身，而根类的`isa`指针为`nil`
 
 我们再看看消息处理流程：
 
@@ -111,7 +111,7 @@ When it encounters a method call, the compiler generates a call to one of the
 
 当对象查询不到相关的方法，消息得不到该对象处理，会启动“消息转发”机制。消息转发还分为几个阶段：先询问`receiver`或者说是它所属的类是否能动态添加方法，以处理当前这个消息，这叫做“动态方法解析”，runtime会通过`+resolveInstanceMethod:`判断能否处理。如果runtime完成动态添加方法的询问之后，`receiver`仍然无法正常响应则Runtime会继续向receiver询问是否有其它对象即其它receiver能处理这条消息，若返回能够处理的对象，Runtime会把消息转给返回的对象，消息转发流程也就结束。若无对象返回，Runtime会把消息有关的全部细节都封装到`NSInvocation`对象中，再给`receiver`最后一次机会，令其设法解决当前还未处理的这条消息。
 
->消息处理越往后，开销也就会越大，因此最好直接在第一步就可以得到消息处理。
+**提示：**消息处理越往后，开销也就会越大，因此最好直接在第一步就可以得到消息处理。
 
 我们看看类结构体：
 
@@ -183,22 +183,3 @@ bnum          | A bit field of num bits
 
 理论知识就写这么多吧，这篇文章只是讲讲一些比较基础的知识点，为后面的学习奠定基础。如果文章中出现有疑问的地方，请在评论中评论，笔者会在第一时间回复您的！
 
-#关注我
-
-
-如果在使用过程中遇到问题，或者想要与我交流，可加入有问必答**QQ群：[324400294]()**
-
-关注微信公众号：[**iOSDevShares**]()
-
-关注新浪微博账号：[标哥Jacky](http://weibo.com/u/5384637337)
-
-**阅读原文：**[http://www.henishuo.com/runtime-base-theory/](http://www.henishuo.com/runtime-base-theory/)
-
-#支持并捐助
-
-
-如果您觉得文章对您很有帮忙，希望得到您的支持。您的捐肋将会给予我最大的鼓励，感谢您的支持！
-
-支付宝捐助      | 微信捐助
-------------- | -------------
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/alipay-e1451124478416.jpg) | ![image](http://www.henishuo.com/wp-content/uploads/2015/12/weixin.jpg)

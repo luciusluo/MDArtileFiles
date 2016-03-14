@@ -21,12 +21,14 @@
 
 ##第一关：笔试题
 
-
-* **[iOS笔试题基础部分](http://www.henishuo.com/ios-base-writing-in-test/)**
+* **[iOS基础C/C++笔试题](http://www.henishuo.com/ios-c-cpp-interview/)**
+* **[ObjC基础笔试题集锦一](http://www.henishuo.com/objective-c-base-interview/)**
+* **[ObjC基础笔试题集锦二](http://www.henishuo.com/objc-interview-two/)**
 * **[宝库iOS开发笔试题](http://www.henishuo.com/ios-baoku-interview-questions/)**
 * **[要出发公司iOS笔试题](http://www.henishuo.com/ios-needgo-interview/)**
 * **[iOS中高级笔试题一](http://www.henishuo.com/ios-middle-interview-one/)**
 * **[iOS中高级笔试题二](http://www.henishuo.com/ios-middle-hight-interview-two/)**
+* **[南京JingDong笔试题](http://www.henishuo.com/nanjing-jingdong-interview/)**
 
 ##第二关：面试题
 

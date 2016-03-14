@@ -1,13 +1,9 @@
->#iOS App之间如何通信
+#前言
 
----
 假设需求是这样的：由一个app1跳转到app2之后，app2完成某项任务之后，怎么把app2的完成信息传到app1（自己的程序是app1），传的是什么类型的数据，怎么进行解析？
-
->#支持原创，请[阅读原文](http://www.henishuo.com/ios-app-communication/)
 
 #逻辑
 
----
 本文章使用TestApp1作为第一个app的URL Schemes，TestApp2为第二个app的URL Schemes。
 
 #TestApp1工程配置
@@ -28,7 +24,6 @@
 
 #TestApp1工程中实现代码测试
 
----
 
 ```
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
@@ -54,7 +49,6 @@
 
 #TestApp2工程中实现代码测试
 
----
 ```
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url {
   NSString *receText = [[url host] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
@@ -80,7 +74,7 @@
 
 #TestApp1打印日志
 
----
+
 ```
 2015-12-03 22:30:10.250 TestApp1[9008:678123] paySuccess=1    TestApp1://paySuccess=1
 ```
@@ -89,7 +83,7 @@
 
 #TestApp2打印日志
 
----
+
 ```
 2015-12-03 22:29:59.690 TestApp2[9004:677942] success=1&count=100    TestApp2://success=1&count=100
 ```
@@ -99,18 +93,12 @@
 
 #最后
 
----
+
 最近不少朋友问到我应用之间如何相互调用，又如何传参数的问题，在这里统一讲解了。
 
 #源代码
 
----
+
 如果单看文章，看不太明白，可以到github下载源代码运行看看效果：[https://github.com/CoderJackyHuang/AppCommunicationDemo](https://github.com/CoderJackyHuang/AppCommunicationDemo)
-
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/ios-app-communication/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/ios-app-communication/)**
 
 
