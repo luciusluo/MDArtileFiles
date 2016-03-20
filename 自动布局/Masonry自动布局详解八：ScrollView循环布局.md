@@ -1,22 +1,19 @@
->#Masonry自动布局详解七：ScrollView循环布局
+#前言
 
----
 说到`iOS`自动布局，有很多的解决办法。有的人使用`xib/storyboard`自动布局，也有人使用`frame`来适配。对于前者，笔者并不喜欢，也不支持。对于后者，更是麻烦，到处计算高度、宽度等，千万大量代码的冗余，对维护和开发的效率都很低。
 
 笔者在这里介绍纯代码自动布局的第三方库：`Masonry`。这个库使用率相当高，在全世界都有大量的开发者在使用，其`star`数量也是相当高的。
 
->#支持原创，请[阅读原文](http://www.henishuo.com/masonry-scrollview-loop-layout/)
-
 #效果图
 
----
+
 本节详解`Masonry`的循环创建视图的基本用法，先看看效果图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/11/ADCBFCEE-48F9-46FD-8351-A3968A99DBE6.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/11/ADCBFCEE-48F9-46FD-8351-A3968A99DBE6-e1458444091566.jpg)
 
 #核心代码
 
----
+
 
 看下代码：
 
@@ -97,7 +94,6 @@
 
 #讲解
 
----
 对于循环创建，我们需要记录下一个视图所依赖的控件，这里使用了`lastLabel`来记录。
 
 我们要想让`scrollview`的`contentSize`随内容的变化而变化，那么就我们一定要添加注意添加约束：
@@ -115,13 +111,8 @@
 
 #源代码
 
----
-大家可以到笔者的`github`下载源代码：[https://github.com/CoderJackyHuang/MasonryDemo](https://github.com/CoderJackyHuang/MasonryDemo)
 
-> 温馨提示：本节所讲内容对应于`ScrollViewController`中的内容
+大家可以到笔者的`github`下载源代码：[MasonryDemo](https://github.com/CoderJackyHuang/MasonryDemo)
 
-#关注我
+**温馨提示：**本节所讲内容对应于`ScrollViewController`中的内容
 
----
-**微信公众号：[iOSDevShares]()**<br>
-**有问必答QQ群：324400294**

@@ -1,12 +1,10 @@
->#ios属性修饰符总结 
+#前言
 
----
 
-很多刚接触iOS的朋友对属性的@property的可选参数如何使用，什么情况下使用哪种选项不了解，也问了我很多这方面的知识，虽然知道怎么用，但是有些说不出其区别。在这里，再次深入学习一遍，对`copy/strong/weak/__weak/__strong/assign`的使用场景总结总结。如果有说得不对的地方，请指出。如果有疑问，请私聊我，或者直接回复我。
+很多刚接触iOS的朋友，对property的可选参数如何使用，什么情况下使用哪种选项不了解，也问了我很多这方面的知识，虽然知道怎么用，但是有些说不出其区别。在这里，再次深入学习一遍，对`copy/strong/weak/__weak/__strong/assign`的使用场景总结总结。如果有说得不对的地方，请指出。如果有疑问，请私聊我，或者直接回复我。
 
 #自动引用计数
 
----
 原文档关于自动引用说明：
 
 ```
@@ -27,7 +25,6 @@ Automatic Reference Counting (ARC) is a compiler feature that provides automatic
 
 #实战性学习
 
----
 下面我们来声明一个Person类来学习：
 
 ```
@@ -74,8 +71,6 @@ NSLog(@"weakArray: %@", weakArray);
 
 #xib/storybard连接的对象为什么可以使用weak
 
----
-
 ```
 @property (nonatomic, weak) IBOutlet UIButton *button;
 ```
@@ -100,8 +95,7 @@ NSLog(@"weakArray: %@", weakArray);
 
 #block声明使用copy
 
----
-在使用block时，尽量使用typedef来起一个别名，这样更容易阅读。使block作为属性时，使用copy。
+在使用block时，尽量使用typedef来起一个别名，这样更容易阅读。使block作为属性时，尽量使用copy。苹果官方有说明，因为有上下文变量捕获，应该使用copy。但是很多朋友说使用strong也一样，没有区别。目前，没有办法说明这使用strong与copy导致有没有区别。不过，笔者一直都会使用copy来声明Block，而不是strong：
 
 ```
 typedef void (^HYBTestBlock)(NSString *name);
@@ -111,8 +105,7 @@ typedef void (^HYBTestBlock)(NSString *name);
 
 #字符串使用copy
 
----
-对于字符串，通常都是使用copy的方式。虽然使用strong似乎也没有没有问题，但是事实上在开发中都会使用copy。为什么这么做？因为对于字符串，我们希望是一次内容的拷贝，外部修改也不会影响我们的原来的值，而且NSString类遵守了NSCopying, NSMutableCopying, NSSecureCoding协议。
+对于字符串，通常都是使用copy的方式。虽然使用strong也没有没有问题，但是事实上在开发中都会使用copy。为什么这么做？因为对于字符串，我们希望是一次内容的拷贝，外部修改也不会影响我们的原来的值，而且NSString类遵守了NSCopying, NSMutableCopying, NSSecureCoding协议。
 
 下面时使用copy的方式，验证如下：
 
@@ -130,12 +123,11 @@ NSLog(@"%@, %@", hahaString, heheString);
 
 #属性声明修饰符
 
----
-属性声明修饰符有：strong, weak, unsafe_unretained, readWrite，默认strong, readWrite的。
+属性声明修饰符有：strong, weak, unsafe\_unretained, readWrite，默认strong, readWrite的。
 
 * strong：strong和retain相似,只要有一个strong指针指向对象，该对象就不会被销毁
 * weak：声明为weak的指针，weak指针指向的对象一旦被释放，weak的指针都将被赋值为nil；
-* unsafe_unretained：用unsafe_unretained声明的指针，指针指向的对象一旦被释放，这些指针将成为野指针。
+* unsafe\_unretained：用unsafe\_unretained声明的指针，指针指向的对象一旦被释放，这些指针将成为野指针。
 
 ```
 @property (nonatomic, copy) NSString *name;
@@ -151,15 +143,25 @@ NSLog(@"%@", lili.unsafeName);
 
 #深拷贝与浅拷贝
 
----
 关于浅拷贝，简单来说，就像是人与人的影子一样。而深拷贝就像是梦幻西游中的龙宫有很多个长得一样的龙宫，但是他们都是不同的精灵，因此他们各自都是独立的。
 
-我相信还有不少朋友有这样一种误解：浅拷贝就是用copy，深拷贝就是用mutableCopy。如果有这样的误解，一定要更正过来。copy只是不可变拷贝，而mutableCopy是可变拷贝。比如，NSArray *arr = [modelsArray copy]，那么arr是不可变的。而NSMutableArray *ma = [modelsArray mutableCopy]，那么ma是可变的。
+我相信还有不少朋友有这样一种误解：浅拷贝就是用copy，深拷贝就是用mutableCopy。如果有这样的误解，一定要更正过来。copy只是不可变拷贝，而mutableCopy是可变拷贝。比如，
+
+```
+// 那么arr是不可变的
+NSArray *arr = [modelsArray copy];
+
+// 那么ma是可变的。
+NSMutableArray *ma = [modelsArray mutableCopy];
+```
+
+举个例子：
 
 ```
 lili.array = [@[@"谢谢", @"感谢"] mutableCopy];
 NSMutableArray *otherArray = [lili.array copy];
 lili.array[0] = @"修改了谢谢";
+
 // 打印： 谢谢 修改了谢谢
 // 说明数组里面是字符串时，直接使用copy是相当于深拷贝的。
 NSLog(@"%@ %@", otherArray[0], lili.array[0]);
@@ -214,6 +216,8 @@ p.name = @"lili的名字被修改了";
 NSLog(@"%@", ((Person *)(personArray[0])).name);
 ```
 
+阅读更多关于[深拷贝与浅拷贝](http://www.henishuo.com/ios-shadowcopy-deepcopy/)
+
 #Getter/Setter
 
 在ARC下，getter/setter的写法与MRC的不同了。我面试过一些朋友，笔试这关就写得很糟（不包括算法）。通常在笔试时都会让重写一个属性的Getter/Setter方法。
@@ -248,30 +252,18 @@ NSLog(@"%@", ((Person *)(personArray[0])).name);
 
 #总结
 
----
 关于属性的这些选项的学习，做一下总结：
 
 * 所有的属性，都尽可能使用nonatomic，以提高效率，除非真的有必要考虑线程安全。
 * NSString：通常都使用copy，以得到新的内存分配，而不只是原来的引用。
-* strong：对于继承于NSObject类型的对象，若要声明为强使用，使用strong，若要使用弱引用，使用__weak来引用，用于解决循环强引用的问题。
+* strong：对于继承于NSObject类型的对象，若要声明为强使用，使用strong，若要使用弱引用，使用\_\_weak来引用，用于解决循环强引用的问题。
 * weak：对于xib上的控件引用，可以使用weak，也可以使用strong。
-* __weak：对于变量的声明，如果要使用弱引用，可以使用weak，如：weak typeof(Model) weakModel = model;就可以直接使用weakModel了。
-* __strong：对于变量的声明，如果要使用强引用，可以使用strong，默认就是strong，因此不写与写__strong声明都是一样的。
-* unsafe_unretained：这个是比较少用的，几乎没有使用到。在所引用的对象被释放后，该指针就成了野指针，不好控制。
-* _unsafeunretained：也是很少使用。同上。
-* __autoreleasing：如果要在循环过程中就释放，可以手动使用__autoreleasing来声明将之放到自动释放池。
+* \_\_weak：对于变量的声明，如果要使用弱引用，可以使用weak，如：weak typeof(Model) weakModel = model;就可以直接使用weakModel了。
+* \_\_strong：对于变量的声明，如果要使用强引用，可以使用strong，默认就是strong，因此不写与写\_\_strong声明都是一样的。
+* \_\_unsafe\_unretained：在所引用的对象被释放后，该指针就成了野指针，不好控制。对于C语言的指针，我们会使用这个来声明。
+* \_\_autoreleasing：如果要在循环过程中就释放，可以手动使用\_\_autoreleasing来声明将之放到自动释放池。
 
 #参考资料
 
----
 官方文档关于自动引用计数内存管理介绍：[官方文档说明](https://developer.apple.com/library/mac/releasenotes/ObjectiveC/RN-TransitioningToARC/Introduction/Introduction.html)
-
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/)**
-
-
-
 

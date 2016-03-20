@@ -1,26 +1,22 @@
->#Masonry自动布局详解八：复杂ScrollView布局
+#前言
 
----
 说到`iOS`自动布局，有很多的解决办法。有的人使用`xib/storyboard`自动布局，也有人使用`frame`来适配。对于前者，笔者并不喜欢，也不支持。对于后者，更是麻烦，到处计算高度、宽度等，千万大量代码的冗余，对维护和开发的效率都很低。
 
 笔者在这里介绍纯代码自动布局的第三方库：`Masonry`。这个库使用率相当高，在全世界都有大量的开发者在使用，其`star`数量也是相当高的。
 
->#支持原创，请[阅读原文](http://www.henishuo.com/masonry-complex-scrollview-layout/)
 
 #效果图
 
----
 本节详解`Masonry`的循环创建视图，并且可以展开与收缩的用法，先看看效果图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/11/4A4268AF-B930-43EE-8FE2-9EC05F975F59.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/11/4A4268AF-B930-43EE-8FE2-9EC05F975F59-e1458444177500.jpg)
 
 当我们点击某一行时，可以展开：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/11/D036FB39-C202-46EE-BC14-C03D254B0622.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/11/D036FB39-C202-46EE-BC14-C03D254B0622-e1458444143346.jpg)
 
 #核心代码
 
----
 
 看下代码：
 
@@ -178,7 +174,7 @@
 
 #讲解
 
----
+
 当我们要收起的时候，只是简单地设置其高度的约束为`40`，但是当我们要展开时，实现起来就相对麻烦了。因为我们需要重新添加约束，要重新给所点击的视图添加约束，就需要知道前一个依赖视图和后一个依赖视图的约束，以便将相关联的都更新约束。
 
 当我们更新所点击的视图时，我们通过判断是否有前一个依赖视图来设置顶部约束：
@@ -203,13 +199,8 @@ if (nextView) {
 
 #源代码
 
----
-大家可以到笔者的`github`下载源代码：[https://github.com/CoderJackyHuang/MasonryDemo](https://github.com/CoderJackyHuang/MasonryDemo)
 
-> 温馨提示：本节所讲内容对应于`ScrollViewComplexController`中的内容
+大家可以到笔者的`github`下载源代码：[MasonryDemo](https://github.com/CoderJackyHuang/MasonryDemo)
 
-#关注我
+**温馨提示：**本节所讲内容对应于`ScrollViewComplexController`中的内容
 
----
-**微信公众号：[iOSDevShares]()**<br>
-**有问必答QQ群：324400294**

@@ -10,7 +10,7 @@
 
 本节详解`Masonry`的基本用法，先看看效果图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/11/876F3994-1B92-4EE1-A144-EF4D0A2B942C.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/11/876F3994-1B92-4EE1-A144-EF4D0A2B942C-e1458443262674.jpg)
 
 我们这里要布局使这三个控件的高度一致，而绿色和红色的控件高度和宽度相待。
 
@@ -98,18 +98,4 @@ make.right.mas_equalTo(bludView.superView.mas_right).offset(-padding);
 大家可以到笔者的`github`下载源代码：[https://github.com/CoderJackyHuang/MasonryDemo](https://github.com/CoderJackyHuang/MasonryDemo)
 
 温馨提示：本节所讲内容对应于`BasicController`中的内容
-
-
-#关注我
-
-
-关注                | 账号              | 备注
--------------      | -------------     | ----------------
-Swift/ObjC技术群一  | 324400294         |  群一若已满，请申请群二
-Swift/ObjC技术群二  | 494669518         | 群二若已满，请申请群三
-Swift/ObjC技术群三  | 461252383         | 群三若已满，会有提示信息
-关注微信公众号       | iOSDevShares      | 关注微信公众号，会定期地推送好文章
-关注新浪微博账号      |  [标哥Jacky](http://weibo.com/u/5384637337) | 关注微博，每次发布文章都会分享到新浪微博
-关注标哥的GitHub     | [CoderJackyHuang](https://github.com/CoderJackyHuang) | 这里有很多的Demo和开源组件
-关于我               | [进一步了解标哥](http://www.henishuo.com/about-biaoge/) | 如果觉得文章对您很有帮助，可捐助我！
 

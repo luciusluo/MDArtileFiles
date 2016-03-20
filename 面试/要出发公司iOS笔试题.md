@@ -42,6 +42,7 @@
 
 生命周期如下：
 
+```
 * xib/storyboard：-initWithCoder:，而非xib/storyboard的是-initWithNibName:bundle:然后-init
 * -loadView
 * -viewDidLoad
@@ -49,15 +50,24 @@
 * -viewDidAppear:
 * -viewWillDisappear:
 * -viewDidDisappear:
+```
 
 注意，当从ViewController进入到HYBViewController控制器时，注意出现顺序如下：
 
+```
 * -[ViewController viewWillDisappear:]
 * -[HYBViewController viewWillAppear:]
 * -[HYBViewController viewDidAppear:]
 * -[ViewController viewDidDisappear:]
+```
 
 在HYBViewController完全出现后，才会调用前一个控制器的完全消失。像这种要不同控制器之间导航条隐藏与显示控制问题，就需要特别注意其生命周期的顺序。
+
+**注意：**有朋友说这里是错的，不过笔者打印出来验证发现就是这样的顺序！用模态呈现测试!截图如下：
+
+![image](http://www.henishuo.com/wp-content/uploads/2016/03/vcprint-e1458225641298.png)
+
+请大家看看哪里出错！
 
 #请写出有多少有方法给UIImageView添加圆角？
 

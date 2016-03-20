@@ -1,6 +1,5 @@
->#CABasicAnimation精讲
+#前言
 
----
 本教程写了这个效果图的demo，同时总结`CABasicAnimation`的使用方法。
 
 ![image](http://www.henishuo.com/wp-content/uploads/2015/12/animation.gif)
@@ -9,7 +8,6 @@
 
 #实现平移动画
 
----
 实现平移动画，我们可以通过`transform.translation`或者水平`transform.translation.x`或者垂直平移`transform.translation.y`添加动画。
 
 ```
@@ -62,7 +60,6 @@ animation.toValue = [NSValue valueWithCGPoint:CGPointMake(width - 50, 0)];
 
 #旋转动画
 
----
 旋转动画需要借助`CATransform3D`这个表示三维空间的结构体，可以X轴旋转、Y轴旋转、Z轴旋转：
 
 ```
@@ -109,7 +106,6 @@ animation.toValue = [NSValue valueWithCATransform3D:transform3d];
 
 #缩放动画
 
----
 `transform.scale`这个是图的属性路径，设置`scale`值就可以达到缩放的效果：
 
 ```
@@ -152,7 +148,6 @@ animation.toValue = @(0);
 
 #闪烁动画
 
----
 我们这里说的闪烁动画其实就是透明度的变化，当然我们不能通过`alpha`值的变化来实现闪烁动画，因此这个属性是不具备隐式动画效果的。不过系统提供了`opacity`，我们可以通过这个值的变化来实现闪烁效果。
 
 ```
@@ -193,7 +188,6 @@ animation.toValue = @(0);
 
 #路径动画
 
----
 路径动画这里添加了灰常详细的注释说明，几乎都包含了所有常用的属性设置了：
 
 ```
@@ -253,17 +247,7 @@ animation.toValue = @(0);
 
 #源代码
 
----
 小伙伴们可以到github下载源代码了：[https://github.com/CoderJackyHuang/CALayerDemo](https://github.com/CoderJackyHuang/CALayerDemo)
 
-###随手点个star吧~
-
-#[阅读原文](http://www.henishuo.com/cabasicanimation-introduce-in-detail/)
-
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/)**
-
+随手点个star吧~
 

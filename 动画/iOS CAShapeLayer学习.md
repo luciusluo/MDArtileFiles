@@ -1,13 +1,11 @@
->#iOS CAShapeLayer精讲
+#前言
 
----
 `CAShapeLayer`继承自`CALayer`，因此，可使用`CALayer`的所有属性。但是，`CAShapeLayer`需要和贝塞尔曲线配合使用才有意义。
 
-关于`UIBezierPath`，请阅读文章[iOS UIBezierPth精讲](http://www.henishuo.com/uibezierpath-draw/)
+关于`UIBezierPath`，请阅读文章：[iOS UIBezierPth精讲](http://www.henishuo.com/uibezierpath-draw/)
 
 #基本知识
 
----
 看看官方说明：
 
 ```
@@ -29,18 +27,15 @@
 
 #CAShapeLayer和drawRect的比较
 
----
-
-* `drawRect`：属于`CoreGraphics`框架，占用`CPU`，性能消耗大
+* `drawRect`：属于`CoreGraphics`框架，占用`CPU`，性能消耗大，不建议重写
 * `CAShapeLayer`：属于`CoreAnimation`框架，通过`GPU`来渲染图形，节省性能。动画渲染直接提交给手机`GPU`，不消耗内存
 
 这两者各有各的用途，而不是说有了`CAShapeLayer`就不需要`drawRect`。
 
->温馨提示：`drawRect`只是一个方法而已，是`UIView`的方法，重写此方法可以完成我们的绘制图形功能。
+**温馨提示**：`drawRect`只是一个方法而已，是`UIView`的方法，重写此方法可以完成我们的绘制图形功能。
 
 #CAShapeLayer与UIBezierPath的关系
 
----
 `CAShapeLayer`与`UIBezierPath`的关系：
 
 1. `CAShapeLayer`中`shape`代表形状的意思，所以需要形状才能生效
@@ -49,8 +44,6 @@
 4. 用于`CAShapeLayer`的贝塞尔曲线作为`path`，其`path`是一个首尾相接的闭环的曲线，即使该贝塞尔曲线不是一个闭环的曲线
 
 #CAShapeLayer与UIBezierPath画圆
-
----
 
 效果图如下：
 
@@ -90,7 +83,6 @@
 
 #CAShapeLayer与UIBezierPath的简单Loading效果
 
----
 效果图类似这样（懒自己做图，就百度了一个）：
 
 ![image](http://www.henishuo.com/wp-content/uploads/2015/12/圆形进度条iOS.gif)
@@ -148,18 +140,7 @@
 
 #源代码下载
 
----
 小伙伴们可以到github下载：[https://github.com/CoderJackyHuang/UIBezierPathLayerDemos](https://github.com/CoderJackyHuang/UIBezierPathLayerDemos)
 
 要测试哪种效果，就打开对应的注释就可以了。
-
-#[阅读原文](http://www.henishuo.com/ios-cashapelayer-learning/)
-
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/)**
-
-
 

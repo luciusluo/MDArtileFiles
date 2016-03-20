@@ -1,15 +1,12 @@
->#Masonry自动布局详解二：动画更新约束
+#前言
 
----
+
 说到`iOS`自动布局，有很多的解决办法。有的人使用`xib/storyboard`自动布局，也有人使用`frame`来适配。对于前者，笔者并不喜欢，也不支持。对于后者，更是麻烦，到处计算高度、宽度等，千万大量代码的冗余，对维护和开发的效率都很低。
 
 笔者在这里介绍纯代码自动布局的第三方库：`Masonry`。这个库使用率相当高，在全世界都有大量的开发者在使用，其`star`数量也是相当高的。
 
->#支持原创，请[阅读原文](http://www.henishuo.com/masonry-animated-update/)
-
 #效果图
 
----
 本节详解`Masonry`的以动画的形式更新约束的基本用法，先看看效果图：
 
 ![image](http://www.henishuo.com/wp-content/uploads/2015/11/basicanimated.gif)
@@ -18,7 +15,6 @@
 
 #核心代码
 
----
 
 看下代码：
 
@@ -86,7 +82,6 @@
 
 #讲解
 
----
 更新约束的方法是：`mas_updateConstraints`。下面笔者一行行代码说明。
 
 让控件始终居中显示：
@@ -140,13 +135,8 @@ make.width.height.lessThanOrEqualTo(self.view);
 
 #源代码
 
----
-大家可以到笔者的`github`下载源代码：[https://github.com/CoderJackyHuang/MasonryDemo](https://github.com/CoderJackyHuang/MasonryDemo)
 
-> 温馨提示：本节所讲内容对应于`UpdateConstraintsController`中的内容
+大家可以到笔者的`github`下载源代码：[MasonryDemo](https://github.com/CoderJackyHuang/MasonryDemo)
 
-#关注我
+温馨提示：本节所讲内容对应于`UpdateConstraintsController`中的内容。也随手给个star吧！
 
----
-**微信公众号：[iOSDevShares]()**<br>
-**有问必答QQ群：324400294**

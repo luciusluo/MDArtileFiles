@@ -1,32 +1,25 @@
->#Cocoapods完整使用教程
 
----
-由于在微信公众号发的图片，是有版权保护的，因此在这里就显示不出来了，请移步阅读：
+#前言
 
-**[微信公众号文章：iOSDevShares](http://mp.weixin.qq.com/s?__biz=MzIzMzA4NjA5Mw==&mid=214023058&idx=1&sn=02fcf03d8ceb6636489086ba3fc310cc&scene=18#rd)**
 
-##前言
-
----
 对于iOS App的开发，几乎都采用了Cocoapods来管理第三方库，那么对于我们开发人员来说，这是必备技能，必须要掌握如何使用。这篇文章就是介绍如何安装和使用CocoaPods的。
 
 这篇文章对哪些人群参考价值？
-> * 对未使用过Cocoapods的人群有参考价值
-> * 对使用过Cocoapods，但是未深入了解过的用户有参考价值
-> * 对有开源精神的，希望将自己的代码贡献到Cocoapods的用户有参考价值
+
+* 对未使用过Cocoapods的人群有参考价值
+* 对使用过Cocoapods，但是未深入了解过的用户有参考价值
+* 对有开源精神的，希望将自己的代码贡献到Cocoapods的用户有参考价值
 
 如果您不属于以上人群，您是可以不阅读本篇文章的，当然阅读完也会有很大的帮助。
 
-> 温馨提示：在篇文章中所使用的Xcode版本为Xcode7.
+**温馨提示**：在篇文章中所使用的Xcode版本为Xcode7.
 
-##什么是CocoaPods？
+#什么是CocoaPods？
 
----
 简单来说，就是专门为iOS工程提供对第三方库的依赖的管理工具，通过CocoaPods，我们可以单独管理每个第三方库，可以更方便地管理每个第三方库的版本，而且不需要我们做太多的配置，直接交由提供支持CocoaPods项目的作者来配置了，如此便可直观、集中和自动化地管理我们项目的第三方库。
 
 ##为什么需要使用CocoaPods？
 
----
 我们也许有过这样的感受：
 每添加一个**第三方库、Framework或者SDK**，我们都需要手动添加相关依赖库，在工程`buildsetting`中配置路径，在build phases中添加依赖的系统库。如果所导入的第三方库还依赖其他第三方库，我们也需要手动导入且分别添加工程配置。
 
@@ -39,10 +32,10 @@
 
 ##如何安装CocoaPods？
 
----
-> CocoaPods is built with Ruby and is installable with the default Ruby available on OS X. We recommend you use the default ruby.
+CocoaPods is built with Ruby and is installable with the default Ruby available on OS X. We recommend you use the default ruby.
 
-> CocoaPods是通过Ruby来安装的，MAC OSX都有一个默认的Ruby版本，推荐我们通过默认的Ruby来安装CocoaPods。
+也就是说CocoaPods是通过Ruby来安装的，MAC OSX都有一个默认的Ruby版本，推荐我们通过默认的Ruby来安装CocoaPods。
+
 使用下面的命令安装：
 
 ```
@@ -58,12 +51,11 @@ sudo gem install cocoapods
 
 等待安装完成后，就可以开始使用`CocoaPods`了。
 
-> 注意：`source`或者`sources`都可以.
+**注意：**`source`或者`sources`都可以.
 
 
-##如何使用CocoaPods？
+#如何使用CocoaPods？
 
----
 要使用`CocoaPods`，就需要一个`Podfile`文件。我们是如何为所有的工程建立`Podfile`的，下面的方式是基本的方式。
 
 ```
@@ -88,7 +80,9 @@ pod 'ObjectiveSugar', '~> 0.5'
 
 关于Podfile更高级的使用，请参考[**官方文档**](https://guides.cocoapods.org/using/the-podfile.html)
 
-####在Objective-C工程中的使用
+或者关注后续文章！
+
+#在Objective-C工程中的使用
 
 在工程中，我们只需要通过引入改文件就可以直接使用了，比如我们引入了第三方库`Masonry`（纯代码自动布局），我们在`Objective-C`工程中就可以通过`import`头文件即可。
 
@@ -102,22 +96,21 @@ pod 'ObjectiveSugar', '~> 0.5'
 如果仍然没有效果，那么需要在工程配置一下.在工程的`Build Settings`搜索`Search Paths`，然后在`User header search paths`中添加`$(SRCROOT)`并选择`recursive`（也就是递归查找）
 
 
-####在Swift工程中的使用
+#在Swift工程中的使用
 
----
+
 我相信大家在`Swift`工程中使用`CocoaPods`也遇到了不少问题，尤其是如何`import`模块问题。
 当初我遇到这种问题时，也在网上搜索了很多的资料，但是都不是我希望的方案。在网上有两种方式：
 通过Swift工程可以桥接`Objectice-C`的方式，建立一个`Bridge-head.h`（名字随便起），然后进入到`Build Settings`，在搜索框中输入`bridg`，找到`Objective-C Bridging Header`，选项，把头文件的路径赋值给该选项。如下所示：
 
 ![image](http://www.henishuo.com/wp-content/uploads/2015/12/屏幕快照-2015-12-09-上午9.50.08.png)
 
-也就是：工程名/桥接文件名.h。
-在刚才所建立的桥接文件中，通过`#import "头文件.h"`就可以了。
+也就是：工程名/桥接文件名.h。在刚才所建立的桥接文件中，通过`#import "头文件.h"`就可以了。
 
 
-虽然是`Objective-C`第三方库，事实上我们也可以使用`Swift`的方式引入的，也就是通过 `import 模块名` 的方式来引入。所以对于上面的方式，我是不喜欢的。那么再看看网上的另一种方式。
+虽然是`Objective-C`第三方库，事实上我们也可以使用`Swift`的方式引入的，也就是通过 `import 模块名` 的方式来引入。所以对于上面的方式，我是不喜欢的。那么再看看网上的另一种方式：[Swift第三方管理](http://blog.shiqichan.com/How-To-Import-3rd-Lib-Into-Swift-Project/)
 
-原文链接：[http://blog.shiqichan.com/How-To-Import-3rd-Lib-Into-Swift-Project/](http://blog.shiqichan.com/How-To-Import-3rd-Lib-Into-Swift-Project/)
+当然，现在swift出了一个[Package Manager](https://swift.org/package-manager/)，专门管理第三方引用的。
 
 这是通过`submodule`的方式来管理的。
 创建`submodule`,在当前项目的同级目录下执行类似这样的命令，如下：
@@ -148,12 +141,12 @@ dyld: Library not loaded: @rpath/ReactiveCocoa.framework/ReactiveCocoa
 Referenced from: /private/var/mobile/Containers/Bundle/Application/31ABC86A-C1BD-40DD-A117-D2C8F79A98FE/SwiftGithubClient.app/SwiftGithubClient Reason: image not found
 ```
 
-那么我们可以这么解决：
-> 在`Build Phases->Link Binary With Libraries`->找到出错的库的名称->修改`required`为`optional`即可。
+**那么我们可以这么解决：**
 
-##如何升级CocoaPods版本？
+在`Build Phases->Link Binary With Libraries`->找到出错的库的名称->修改`required`为`optional`即可。
 
----
+#如何升级CocoaPods版本？
+
 升级CocoaPods是非常简单的，只需要一个命令即可。
 正常情况下，只需要一个命令就可以升级了：
 
@@ -181,9 +174,8 @@ $ pod --version
 0.39.0
 ```
 
-##如何让自己的开源项目支持CocoaPods？
+#如何让自己的开源项目支持CocoaPods？
 
----
 这里就介绍我写的一个三方库`HYBMasonryAutoCellHeight`让其支持`Cocoapods`的步骤。
 
 * 1、第一步：打开终端并进入到工程的目录。这里是我所开源的一个`HYBMasonryAutoCellHeight`开源库，用于自动计算`cell`的高度。
@@ -298,38 +290,26 @@ $ pod search HYBMasonryAutoCellHeight
    - Versions: 0.0.1 [master repo]
 ```
 
-更详细地使用，请参考官方文档:
-[https://guides.cocoapods.org/making/making-a-cocoapod.html](https://guides.cocoapods.org/making/making-a-cocoapod.html)
+更详细地使用，请参考[官方文档](https://guides.cocoapods.org/making/making-a-cocoapod.html)
 
-这里有一篇文章，写得相当不错：http://www.exiatian.com/cocoapods%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E5%8F%8A%E9%85%8D%E7%BD%AE%E7%A7%81%E6%9C%89%E5%BA%93/
+这里有一篇文章，写得相当不错：[支持pod](http://www.exiatian.com/cocoapods%E5%AE%89%E8%A3%85%E4%BD%BF%E7%94%A8%E5%8F%8A%E9%85%8D%E7%BD%AE%E7%A7%81%E6%9C%89%E5%BA%93/)
 
-##如何生成Cocoapods私有库？
+#如何生成Cocoapods私有库？
 
----
 要让自己的库变成私有库，那么我们的代码也是需要通过`git`来管理的。
 这里假设我们新建了一个工程，名叫`BookEffect`，然后已经`push`到`git`远程服务器。
 
 * 第一步：按照第六节一样，创建好`podspec`文件，并将整个工程推送到`git`服务器这边。
 * 第二步：这才是引入私有库的方式。`pod 'DemoLib',:git=>"http://xxxxx.git"`(替换为真实的git地址)
 
-> 具体不细说，请参考：[http://www.cnblogs.com/superhappy/p/3468377.html](http://www.cnblogs.com/superhappy/p/3468377.html)
+具体不细说，请参考：[生成私有pod](http://www.cnblogs.com/superhappy/p/3468377.html)
 
-##使用Cocoapods打包静态库
+#使用Cocoapods打包静态库
 
----
-> 这里就不细说，不过推荐一篇文章：[http://www.cnblogs.com/brycezhang/p/4117180.html](http://www.cnblogs.com/brycezhang/p/4117180.html)
-> 
-> 写得很不错，如果需要，可以参考。
+这里就不细说，不过推荐一篇文章：[打包表态库](http://www.cnblogs.com/brycezhang/p/4117180.html)，写得很不错，如果需要，可以参考。
 
 最后，感谢各位认真阅读本篇文章，感谢您的支持。
 
-> 参考：[https://cocoapods.org/?q=blocksk](https://cocoapods.org/?q=blocksk)
+#参考
 
-#[阅读原文](http://www.henishuo.com/cocoapods-use/)
-
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/)**
-
+* [官方文档](https://guides.cocoapods.org/making/index.html)

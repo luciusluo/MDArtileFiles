@@ -1,6 +1,5 @@
->#CAAnimation解读
+#序言
 
----
 `CAAnimation`是一个抽象类，遵循了`CAMediaTiming`协议和`CAAction`协议！我们不要直接使用`CAAnimation`类，而是使用其子类：
 
 * `CATransition`：提供渐变效果，如推拉`push`效果,消退`fade`效果,揭开`reveal`效果
@@ -11,7 +10,6 @@
 
 #创建对象
 
----
 我们看到有一个工厂方法来创建`CAAnimation`对象，因此，我们通常都使用这个方法来创建动画：
 
 ```
@@ -29,7 +27,6 @@
 
 #遵守了CAMediaTiming协议
 
----
 这个协议是是用于配置动画的相关属性的，英文部分是官方的注释，中文部分为笔者的理解，下面一一讲解：
 
 ```
@@ -87,7 +84,7 @@
 
 #遵守了CAAction协议
 
----
+
 这个协议只有一个方法，我们可以调用此方法来触发指定的事件，这样接收者就可以接收到代理。
 
 ```
@@ -103,7 +100,7 @@
 
 #CAAnimationDelegate代理
 
----
+
 `CAAnimation`为这么个属性：
 
 ```
@@ -131,7 +128,6 @@
 
 #removedOnCompletion属性
 
----
 
 当我们动画完成时，如果希望动画就自动移除的话，我们可以设置此属性为`YES`，默认值为`YES`。如果我们想要循环或者执行多次动画，就将此属性设置为`NO`
 
@@ -145,7 +141,6 @@
 
 #timingFunction属性
 
----
 这个属性是用于指定动画移动的步调是什么样式，比如线性。
 
 ```
@@ -202,14 +197,4 @@ CA_EXTERN NSString * const kCAMediaTimingFunctionDefault
 
 - (instancetype)initWithControlPoints:(float)c1x :(float)c1y :(float)c2x :(float)c2y;
 ```
-
-#[阅读原文](http://www.henishuo.com/caanimation-indtroduce-in-detail/)
-
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/)**
-
-
 

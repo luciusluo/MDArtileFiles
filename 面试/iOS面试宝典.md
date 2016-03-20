@@ -29,6 +29,9 @@
 * **[iOS中高级笔试题一](http://www.henishuo.com/ios-middle-interview-one/)**
 * **[iOS中高级笔试题二](http://www.henishuo.com/ios-middle-hight-interview-two/)**
 * **[南京JingDong笔试题](http://www.henishuo.com/nanjing-jingdong-interview/)**
+* **[YouKu iOS笔试题一](http://www.henishuo.com/youku-interview-one/)**
+* **[YouKu iOS笔试题二](http://www.henishuo.com/youku-ios-interview-two/)**
+
 
 ##第二关：面试题
 
