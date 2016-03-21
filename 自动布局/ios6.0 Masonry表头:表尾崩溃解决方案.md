@@ -1,22 +1,18 @@
->#iOS 6.0 Masonry自动布局表头/表尾时崩溃解决方案
+#前言
 
----
 使用`Masonry`要兼容`iOS6.0`，正常情况下都是可以的。但是对于`UITableView`的`tableHeaderView`或者`tableFooterView`不能直接添加约束，否则在`iOS6.0`上必闪退。
 
 ####提示：若您的App不需要支持到iOS6.0，那么您没必要继续阅读这篇文章
 
->#支持原创，请[阅读原文](http://www.henishuo.com/ios-6-0-masonry-header-footer-crash/)
-
-
 #解决方案
 
----
 
 ```
 - (void)configTableView {
   if (self.tableView != nil) {
     return;
   }
+  
   self.tableView = [[UITableView alloc] init];
   [self.view addSubview:self.tableView];
   [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
@@ -116,10 +112,6 @@ h = h < self.view.frame.size.height ? self.view.frame.size.height : h;
 
 第二次调用的时候，就是直接写`self.tableView.tableHeaderView = headerView`就可以了。
 
-#关注我
+#最后
 
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/ios-6-0-masonry-header-footer-crash/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/ios-6-0-masonry-header-footer-crash/)**
-
-
+总结工作中所出现过的点点滴滴，帮助他人的同时，对自己也很有帮助哦！大家不防也试试！

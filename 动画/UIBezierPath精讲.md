@@ -1,15 +1,11 @@
->#学习UIBezierPath画图
+#前言
 
----
 笔者在写本篇文章之前，也没有系统学习过贝塞尔曲线，只是曾经某一次的需求需要使用到，才临时百度看了一看而且使用最基本的功能。现在总算有时间停下来好好研究研究这个神奇而伟大的贝塞尔先生！
 
 笔者在学习时，首先看了两遍`UIBezierPath`类头文件定义，熟悉了一下相关的属性和方法。
 
->#支持原创，请[阅读原文](http://www.henishuo.com/uibezierpath-draw/)
-
 #基础知识
 
----
 使用`UIBezierPath`可以创建基于矢量的路径，此类是`Core Graphics`框架关于路径的封装。使用此类可以定义简单的形状，如椭圆、矩形或者有多个直线和曲线段组成的形状等。
     
 `UIBezierPath`是`CGPathRef`数据类型的封装。如果是基于矢量形状的路径，都用直线和曲线去创建。我们使用直线段去创建矩形和多边形，使用曲线去创建圆弧（arc）、圆或者其他复杂的曲线形状。
@@ -21,9 +17,8 @@
  3. 添加线或者曲线去定义一个或者多个子路径
  4. 改变`UIBezierPath`对象跟绘图相关的属性。如，我们可以设置画笔的属性、填充样式等
 
-#`UIBezierPath`创建方法介绍
+#UIBezierPath创建方法介绍
 
----
 我们先看看`UIBezierPath`类提供了哪些创建方式，这些都是工厂方法，直接使用即可。
 
 ```
@@ -85,14 +80,19 @@
 `clockwise`: 是否顺时针画弧线
 
 
->###温馨提示：我们下面的代码都是在自定义的BezierPathView类中的`- (void)drawRect:(CGRect)rect`方法中调用 
+###温馨提示
+
+我们下面的代码都是在自定义的BezierPathView类中下面的方法中调用：
+
+```
+- (void)drawRect:(CGRect)rect`
+```
 
 #画三角形
 
----
 先看效果图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/24456C0A-4A3F-4070-8CE6-CFFD95CEABCD.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/12/24456C0A-4A3F-4070-8CE6-CFFD95CEABCD-e1449149195388.jpg)
 
 ```
 // 画三角形
@@ -147,10 +147,9 @@ UIColor *strokeColor = [UIColor blueColor];
 
 #画矩形
 
----
 先看效果图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/rect.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/12/rect-e1449149188608.jpg)
 
 ```
 // 画矩形
@@ -204,12 +203,11 @@ typedef CF_ENUM(int32_t, CGLineJoin) {
 
 #画圆
 
----
 我们可以使用`+ bezierPathWithOvalInRect:`方法来画圆，当我们传的`rect`参数是一下正方形时，画出来的就是圆。
 
 先看效果图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/FCFB3F34-8645-4270-87B1-BC56C9FE763A.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/12/FCFB3F34-8645-4270-87B1-BC56C9FE763A-e1449149181346.jpg)
 
 ```
 - (void)drawCiclePath {
@@ -230,14 +228,13 @@ typedef CF_ENUM(int32_t, CGLineJoin) {
 }
 ```
 
->注意：要画圆，我们需要传的`rect`参数必须是正方形哦！
+**注意：**要画圆，我们需要传的`rect`参数必须是正方形哦！
 
 #画椭圆
 
----
 先看效果图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/oval.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/12/oval-e1449149174734.jpg)
 
 前面我们已经画圆了，我们可以使用`+ bezierPathWithOvalInRect:`方法来画圆，当我们传的`rect`参数是一下正方形时，画出来的就是圆。那么我们要是不传正方形，那么绘制出来的就是椭圆了。
 
@@ -263,7 +260,7 @@ typedef CF_ENUM(int32_t, CGLineJoin) {
 
 #画带圆角的矩形
 
----
+
 ```
 + (instancetype)bezierPathWithRoundedRect:(CGRect)rect
                             cornerRadius:(CGFloat)cornerRadius;
@@ -276,7 +273,7 @@ typedef CF_ENUM(int32_t, CGLineJoin) {
 
 四个都是圆角10：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/roundedRect.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/12/roundedRect-e1449149166599.jpg)
 
 ```
 - (void)drawRoundedRectPath {
@@ -303,11 +300,10 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(20, 20, 
 ```
 其中第一个参数一样是传了个矩形，第二个参数是指定在哪个方向画圆角，第三个参数是一个`CGSize`类型，用来指定水平和垂直方向的半径的大小。看下效果图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/aroundedrect.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/12/aroundedrect-e1449149158742.jpg)
 
 #画弧
 
----
 画弧前，我们需要了解其参考系，如下图（图片来自网络）：
 
 ![image](http://img.blog.csdn.net/20130904200813921?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvY3JheW9uZGVuZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
@@ -337,17 +333,16 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(20, 20, 
 
 效果图如下：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/arc.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/12/arc-e1449149148599.jpg)
 
 我们要明确一点，画弧参数`startAngle`和`endAngle`使用的是弧度，而不是角度，因此我们需要将常用的角度转换成弧度。对于效果图中，我们设置弧的中心为控件的中心，起点弧度为0，也就是正东方向，而终点是135度角的位置。如果设置的`clockwise:YES`是逆时针方向绘制，如果设置为`NO`，效果如下：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/clockarc.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/12/clockarc-e1449149140830.jpg)
 
 这两者正好是相反的。
 
 #画二次贝塞尔曲线
 
----
 先来学习一下关于控制点，如下图（图片来自网络）：
 
 ![image](http://dl2.iteye.com/upload/attachment/0090/9876/6a920716-76c9-39c8-8476-8952b765b2e1.jpeg)
@@ -365,7 +360,7 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(20, 20, 
 
 看效果图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/second.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/12/second-e1449149126382.jpg)
 
 ```
 - (void)drawSecondBezierPath {
@@ -396,16 +391,16 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(20, 20, 
 
 在效果图中，拱桥左边的起始点就是我们设置的起始点，最右边的终点，就是我们设置的终端点，而我们设置的控制点为（width / 2, 0）对应于红色矩形中水平方向在正中央，而垂直方向在最顶部。
 
->这个样式看起来很像`sin`或者`cos`函数吧？这两个只是特例而已，其实可以画任意图形，只是想不到，没有做不到的。
+这个样式看起来很像`sin`或者`cos`函数吧？这两个只是特例而已，其实可以画任意图形，只是想不到，没有做不到的。
 
 #画三次贝塞尔曲线
 
----
+
 贝塞尔曲线必定通过首尾两个点，称为端点；中间两个点虽然未必要通过，但却起到牵制曲线形状路径的作用，称作控制点。关于三次贝塞尔曲线的控制器，看下图：
 
 ![image](http://dl2.iteye.com/upload/attachment/0090/9882/0f79aaf8-02a0-3833-9b22-736584af5ffa.jpeg)
 
->提示：其组成是起始端点+控制点1+控制点2+终止端点
+**提示：**其组成是起始端点+控制点1+控制点2+终止端点
 
 如下方法就是画三次贝塞尔曲线的关键方法，以三个点画一段曲线，一般和`-moveToPoint:`配合使用。
 
@@ -417,7 +412,7 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(20, 20, 
 
 看下效果图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/thirdarc.jpg)
+![image](http://www.henishuo.com/wp-content/uploads/2015/12/thirdarc-e1449149054575.jpg)
 
 实现代码是这样的：
 
@@ -447,14 +442,7 @@ UIBezierPath *path = [UIBezierPath bezierPathWithRoundedRect:CGRectMake(20, 20, 
 
 #源代码下载
 
----
-小伙伴们可以到github下载：[https://github.com/CoderJackyHuang/UIBezierPathLayerDemos](https://github.com/CoderJackyHuang/UIBezierPathLayerDemos)
-
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/uibezierpath-draw/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/uibezierpath-draw/)**
+小伙伴们可以到github下载：[UIBezierPathLayerDemos](https://github.com/CoderJackyHuang/UIBezierPathLayerDemos)
 
 
 
