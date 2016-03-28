@@ -1,4 +1,4 @@
-#前言
+#概述
 
 对于开发人员来说，学习网络层知识是必备的，任何一款`App`的开发，都需要到网络请求接口。很多朋友都还在使用原生的`NSURLConnection`一行一行地写，代码到处是，这样维护起来更困难了。
 
@@ -6,7 +6,16 @@
 
 最好的方式就是对网络层再封装一层，全工程不允许直接使用`AFNetworking`的`API`，必须调用我们自己封装的一层，如此一来，任何网络配置都可以在这一层里配置好，使用的人无须知道里面在干嘛，只管调用就可以了。
 
->本篇为基于AFNetworking3.0的版本，支持iOS7及其以上版本。若要支持iOS6，请阅读旧版本：[http://www.henishuo.com/base-on-afnetworking-wrapper/](http://www.henishuo.com/base-on-afnetworking-wrapper/)
+本篇为**基于AFNetworking3.0以上**的版本，支持iOS7及其以上版本。若要支持iOS6，请阅读旧版本：[基于AFNetworking2.5封装](http://www.henishuo.com/base-on-afnetworking-wrapper/)
+
+#升级为3.0版本
+
+* 简化API，以降低使用的要求
+* 增加GET/POST数据缓存、获取缓存大小、清空缓存功能
+* 接口增加刷新缓存功能
+* 增加取消所有请求、取消单个请求功能
+* 格式化打印日志
+* 增加对手动取消请求接口是否在失败时还回调的控制
 
 #常用接口类型
 
@@ -25,21 +34,8 @@
  *
  *  GET请求接口，若不指定baseurl，可传完整的url
  *
- *  @param url     接口路径，如/path/getArticleList?categoryid=1
- *  @param success 接口成功请求到数据的回调
- *  @param fail    接口请求数据失败的回调
- *
- *  @return 返回的对象中有可取消请求的API
- */
-+ (HYBURLSessionTask *)getWithUrl:(NSString *)url
-                          success:(HYBResponseSuccess)success
-                             fail:(HYBResponseFail)fail;
-/*!
- *  @author 黄仪标, 15-11-15 13:11:50
- *
- *  GET请求接口，若不指定baseurl，可传完整的url
- *
  *  @param url     接口路径，如/path/getArticleList
+ *  @param refreshCache 是否刷新缓存。由于请求成功也可能没有数据，对于业务失败，只能通过人为手动判断
  *  @param params  接口中所需要的拼接参数，如@{"categoryid" : @(12)}
  *  @param success 接口成功请求到数据的回调
  *  @param fail    接口请求数据失败的回调
@@ -47,12 +43,18 @@
  *  @return 返回的对象中有可取消请求的API
  */
 + (HYBURLSessionTask *)getWithUrl:(NSString *)url
+                     refreshCache:(BOOL)refreshCache
+                          success:(HYBResponseSuccess)success
+                             fail:(HYBResponseFail)fail;
+// 多一个params参数
++ (HYBURLSessionTask *)getWithUrl:(NSString *)url
+                     refreshCache:(BOOL)refreshCache
                            params:(NSDictionary *)params
                           success:(HYBResponseSuccess)success
                              fail:(HYBResponseFail)fail;
-
-// 支持进度
+// 多一个带进度回调
 + (HYBURLSessionTask *)getWithUrl:(NSString *)url
+                     refreshCache:(BOOL)refreshCache
                            params:(NSDictionary *)params
                          progress:(HYBGetProgress)progress
                           success:(HYBResponseSuccess)success
@@ -78,16 +80,16 @@
  *  @return 返回的对象中有可取消请求的API
  */
 + (HYBURLSessionTask *)postWithUrl:(NSString *)url
+                      refreshCache:(BOOL)refreshCache
                             params:(NSDictionary *)params
                            success:(HYBResponseSuccess)success
                               fail:(HYBResponseFail)fail;
-
-// 支持进度
 + (HYBURLSessionTask *)postWithUrl:(NSString *)url
+                      refreshCache:(BOOL)refreshCache
                             params:(NSDictionary *)params
                           progress:(HYBPostProgress)progress
                            success:(HYBResponseSuccess)success
-                              fail:(HYBResponseFail)fail;```
+                              fail:(HYBResponseFail)fail;
 ```                                
 
 ##图片上传接口
@@ -123,7 +125,115 @@
                                   fail:(HYBResponseFail)fail;
 ```
 
-#设置基础URL
+##上传文件接口
+
+```
+/**
+ *	@author 黄仪标, 16-01-31 00:01:59
+ *
+ *	上传文件操作
+ *
+ *	@param url						上传路径
+ *	@param uploadingFile	待上传文件的路径
+ *	@param progress			上传进度
+ *	@param success				上传成功回调
+ *	@param fail					上传失败回调
+ *
+ *	@return
+ */
++ (HYBURLSessionTask *)uploadFileWithUrl:(NSString *)url
+                           uploadingFile:(NSString *)uploadingFile
+                                progress:(HYBUploadProgress)progress
+                                 success:(HYBResponseSuccess)success
+                                    fail:(HYBResponseFail)fail;
+```
+
+##文件下载接口
+
+```
+/*!
+ *  @author 黄仪标, 16-01-08 15:01:11
+ *
+ *  下载文件
+ *
+ *  @param url           下载URL
+ *  @param saveToPath    下载到哪个路径下
+ *  @param progressBlock 下载进度
+ *  @param success       下载成功后的回调
+ *  @param failure       下载失败后的回调
+ */
++ (HYBURLSessionTask *)downloadWithUrl:(NSString *)url
+                            saveToPath:(NSString *)saveToPath
+                              progress:(HYBDownloadProgress)progressBlock
+                               success:(HYBResponseSuccess)success
+                               failure:(HYBResponseFail)failure;
+```
+
+#取消请求
+
+```
+/**
+ *	@author 黄仪标
+ *
+ *	取消所有请求
+ */
++ (void)cancelAllRequest;
+/**
+ *	@author 黄仪标
+ *
+ *	取消某个请求。如果是要取消某个请求，最好是引用接口所返回来的HYBURLSessionTask对象，
+ *  然后调用对象的cancel方法。如果不想引用对象，这里额外提供了一种方法来实现取消某个请求
+ *
+ *	@param url				URL，可以是绝对URL，也可以是path（也就是不包括baseurl）
+ */
++ (void)cancelRequestWithURL:(NSString *)url;
+```
+
+在使用中，可以通过这样来调用：
+
+```
+// 取消全部请求
+//  [HYBNetworking cancelAllRequest];
+  
+// 取消单个请求方法一
+//  [HYBNetworking cancelRequestWithURL:path];
+  
+// 取消单个请求方法二
+//  [task cancel];
+```
+
+#缓存
+
+```
+/**
+ *	@author 黄仪标
+ *
+ *	默认只缓存GET请求的数据，对于POST请求是不缓存的。如果要缓存POST获取的数据，需要手动调用设置
+ *  对JSON类型数据有效，对于PLIST、XML不确定！
+ *
+ *	@param isCacheGet			默认为YES
+ *	@param shouldCachePost	默认为NO
+ */
++ (void)cacheGetRequest:(BOOL)isCacheGet shoulCachePost:(BOOL)shouldCachePost;
+
+/**
+ *	@author 黄仪标
+ *
+ *	获取缓存总大小/bytes
+ *
+ *	@return 缓存大小
+ */
++ (unsigned long long)totalCacheSize;
+
+/**
+ *	@author 黄仪标
+ *
+ *	清除缓存
+ */
++ (void)clearCaches;
+```
+
+# BaseURL
 
 这里还提供了两个公共接口，一个是用于设置或者更新网络接口的基础URL，一个是获取当前设置使用的网络接口基础URL。
 
@@ -139,14 +249,6 @@
  *  @param baseUrl 网络接口的基础url
  */
 + (void)updateBaseUrl:(NSString *)baseUrl;
-
-/*!
- *  @author 黄仪标, 15-11-15 13:11:06
- *
- *  对外公开可获取当前所设置的网络接口基础url
- *
- *  @return 当前基础url
- */
 + (NSString *)baseUrl;
 ```
 
@@ -165,28 +267,25 @@
 + (void)configCommonHttpHeaders:(NSDictionary *)httpHeaders;
 ```
 
-#请求与响应格式设置
+#请求、响应类型
 
 默认responseType和requestType都是JSON格式。如果不使用JSON，可以全局配置成自己希望的格式即可。若不配置，默认就是JSON。
 
 ```
 /*!
- *  @author 黄仪标, 15-12-25 15:12:38
- *
- *  配置返回格式，默认为JSON。若为XML或者PLIST请在全局修改一下
- *
- *  @param responseType 响应格式
- */
-+ (void)configResponseType:(HYBResponseType)responseType;
-
-/*!
  *  @author 黄仪标, 15-12-25 15:12:45
  *
  *  配置请求格式，默认为JSON。如果要求传XML或者PLIST，请在全局配置一下
  *
- *  @param requestType 请求格式
+ *  @param requestType 请求格式，默认为JSON
+ *  @param responseType 响应格式，默认为JSO，
+ *  @param shouldAutoEncode YES or NO,默认为NO，是否自动encode url
+ *  @param shouldCallbackOnCancelRequest 当取消请求时，是否要回调，默认为YES
  */
-+ (void)configRequestType:(HYBRequestType)requestType;
++ (void)configRequestType:(HYBRequestType)requestType
+             responseType:(HYBResponseType)responseType
+      shouldAutoEncodeUrl:(BOOL)shouldAutoEncode
+  callbackOnCancelRequest:(BOOL)shouldCallbackOnCancelRequest;
 ```
 
 #URL编码问题
@@ -194,15 +293,6 @@
 考虑到网络请求接口中，有时候会有中文参数，这时候就会请求失败，因此我们要对这种类型的`URL`进行编码，否则请求会失败。这里是开启或者关闭自动将`URL`编码的接口，默认为NO，表示不开启。
 
 ```
-/*!
- *  @author 黄仪标, 15-11-15 14:11:40
- *
- *  开启或关闭接口打印信息
- *
- *  @param isDebug 开发期，最好打开，默认是NO
- */
-+ (void)enableInterfaceDebug:(BOOL)isDebug;
-
 /*!
  *  @author 黄仪标, 15-11-15 15:11:16
  *
@@ -213,9 +303,7 @@
 + (void)shouldAutoEncodeUrl:(BOOL)shouldAutoEncode;
 ```
 
-#网络接口数据日志
-
-对于网络请求回来的结果，如果没有一个格式化好的日志打印出来查看，就要通过断点一步步跟踪，然后打开出来看，这太麻烦。因此，这里提供了打印日志的私有`API`。默认是不开启打印日志的。
+#格式化接口数据打印日志
 
 ```
 /*!
@@ -228,16 +316,19 @@
 + (void)enableInterfaceDebug:(BOOL)isDebug;
 ```
 
-通常在`AppDelegate`中应用启动的代理方法中调用设置为开启就可以了。不过是否设置为开启，当应用以发布证书打包时，都不会打印日志，因为这里做了处理，可放心使用。
+开启后会有非常好的打印效果，效果如下：
+
+![image](http://www.henishuo.com/wp-content/uploads/2016/03/QQ20160325-0@2x-1-e1458921436643.png)
+
+通常在`AppDelegate`中应用启动的代理方法中调用设置为开启就可以了。不过是否设置为开启，当应用以发布证书打包时，都不会打印日志，因为这里做了处理，可放心使用。现在已经公开在外部，项目中都可以使用哦：
 
 ```
 // 项目打包上线都不会打印日志，因此可放心。
 #ifdef DEBUG
-#define HYBAppLog(s, ... ) NSLog( @"[%@：in line: %d]-->[message: %@]", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
+#define HYBAppLog(s, ... ) NSLog( @"[%@ in line %d] ===============>%@", [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
 #else
 #define HYBAppLog(s, ... )
 #endif
-
 ```
 
 #安装使用
@@ -245,43 +336,18 @@
 现在已经支持`cocoapods`，引入以下命令即可：
 
 ```
-pod 'HYBNetworking', '~> 2.0.0'
+pod 'HYBNetworking', '~> 3.0.0'
 ```
 
 或者直接下载源代码，拖入工程使用！
 
 #源代码
 
-请大家到我的`github`下载源代码：[https://github.com/CoderJackyHuang/HYBNetworking](https://github.com/CoderJackyHuang/HYBNetworking)
+请大家到我的`github`下载源代码：[HYBNetworking](https://github.com/CoderJackyHuang/HYBNetworking)
 
 #温馨提示
 
 最近老有人问：编译一直报错library not found for -lAFNetworking什么问题？
 
-注意：如果您是使用cocoapods来管理第三方库的，那么直接通过上面安装使用的方式来安装即可，然后pod update一下。如果您不是使用cocoapods来引入的，请手动将AFNetworking对应的版本添加到工程。
+**注意：**如果您是使用cocoapods来管理第三方库的，那么直接通过上面安装使用的方式来安装即可，然后pod update一下。如果您不是使用cocoapods来引入的，请手动将AFNetworking对应的版本添加到工程。
 
-#关注我
-
-
-**Swift/ObjC技术群一：[324400294(已满)]()**
-
-**Swift/ObjC技术群二：[494669518]()**
-
-**ObjC/Swift高级群：[461252383（注明年限，新手勿扰）]()**
-
-关注微信公众号：[**iOSDevShares**]()
-
-关注新浪微博账号：[标哥Jacky](http://weibo.com/u/5384637337)
-
-标哥的GITHUB地址：[CoderJackyHuang](https://github.com/CoderJackyHuang)
-
-**原文有更新，请阅读原文：**[http://www.henishuo.com/base-on-afnetworking3-0-wrapper/](http://www.henishuo.com/base-on-afnetworking3-0-wrapper/)
-
-#支持并捐助
-
-
-如果您觉得文章对您很有帮忙，希望得到您的支持。您的捐肋将会给予我最大的鼓励，感谢您的支持！
-
-支付宝捐助      | 微信捐助
-------------- | -------------
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/alipay-e1451124478416.jpg) | ![image](http://www.henishuo.com/wp-content/uploads/2015/12/weixin.jpg)

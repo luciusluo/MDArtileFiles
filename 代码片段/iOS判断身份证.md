@@ -92,6 +92,54 @@
 + (NSString *)_substringWithString:(NSString *)str begin:(NSInteger)begin end:(NSInteger )end {
   return [str substringWithRange:NSMakeRange(begin, end)];
 }
+
+/**
+ * 功能:判断是否在地区码内
+ * 参数:地区码
+ */
++ (BOOL)_areaCode:(NSString *)code {
+  NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+  [dic setObject:@"北京" forKey:@"11"];
+  [dic setObject:@"天津" forKey:@"12"];
+  [dic setObject:@"河北" forKey:@"13"];
+  [dic setObject:@"山西" forKey:@"14"];
+  [dic setObject:@"内蒙古" forKey:@"15"];
+  [dic setObject:@"辽宁" forKey:@"21"];
+  [dic setObject:@"吉林" forKey:@"22"];
+  [dic setObject:@"黑龙江" forKey:@"23"];
+  [dic setObject:@"上海" forKey:@"31"];
+  [dic setObject:@"江苏" forKey:@"32"];
+  [dic setObject:@"浙江" forKey:@"33"];
+  [dic setObject:@"安徽" forKey:@"34"];
+  [dic setObject:@"福建" forKey:@"35"];
+  [dic setObject:@"江西" forKey:@"36"];
+  [dic setObject:@"山东" forKey:@"37"];
+  [dic setObject:@"河南" forKey:@"41"];
+  [dic setObject:@"湖北" forKey:@"42"];
+  [dic setObject:@"湖南" forKey:@"43"];
+  [dic setObject:@"广东" forKey:@"44"];
+  [dic setObject:@"广西" forKey:@"45"];
+  [dic setObject:@"海南" forKey:@"46"];
+  [dic setObject:@"重庆" forKey:@"50"];
+  [dic setObject:@"四川" forKey:@"51"];
+  [dic setObject:@"贵州" forKey:@"52"];
+  [dic setObject:@"云南" forKey:@"53"];
+  [dic setObject:@"西藏" forKey:@"54"];
+  [dic setObject:@"陕西" forKey:@"61"];
+  [dic setObject:@"甘肃" forKey:@"62"];
+  [dic setObject:@"青海" forKey:@"63"];
+  [dic setObject:@"宁夏" forKey:@"64"];
+  [dic setObject:@"新疆" forKey:@"65"];
+  [dic setObject:@"台湾" forKey:@"71"];
+  [dic setObject:@"香港" forKey:@"81"];
+  [dic setObject:@"澳门" forKey:@"82"];
+  [dic setObject:@"国外" forKey:@"91"];
+  
+  if ([dic objectForKey:code] == nil) {
+    return NO;
+  }
+  return YES;
+}
 ```
 
 #温馨提示
