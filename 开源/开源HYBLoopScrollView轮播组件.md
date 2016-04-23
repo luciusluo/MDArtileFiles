@@ -1,9 +1,25 @@
-#推荐
+#概述
 
+**开源项目名称**：HYBLoopScrollView  
+**开源项目目标**：一键式集成轮播组件
+**当前版本**：3.1.3
 
-`App`中不可或缺的广告轮播图组件，现在开源出来了，希望对大家有帮助！使用过程中有出现任何`bug`，都会很快帮助解决！
+App中不可或缺的广告轮播图组件，现在开源出来了，希望对大家有帮助！使用过程中有出现任何bug，都会很快帮助解决！
 
 ![image](http://www.henishuo.com/wp-content/uploads/2016/03/screen.gif)
+
+#升级到Version 3.1.3
+
+* 优化内存，采用用完即释放的方式加载缓存图片，可降低内存的使用！
+* 去掉内存缓存，当同一个界面使用很多个轮播控件时，就不会内存暴涨
+
+#升级到Version 3.1.2
+
+* 处理page control 点击后跳转不正常的问题
+
+#升级到Version 3.1.1
+
+* fix timer bug, use core foundation timer add/remove from run loop
 
 #升级到Version 3.1.0
 
@@ -186,3 +202,6 @@ loop.shouldAutoClipImageToViewSize = NO;
 
 ###喜欢就给个Star吧！
 
+#License
+
+**MIT LICENSE**

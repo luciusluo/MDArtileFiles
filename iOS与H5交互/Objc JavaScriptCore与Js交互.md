@@ -4,6 +4,7 @@
 
 ObjectiveC与Js交互是常见的需求，可对于新手或者所谓的高手而言，其实并不是那么简单明了。这里只介绍iOS7.0后出来的JavaScriptCore framework。
 
+代码有更新，提供两个页面切换，测试是否可以成功调用！
 
 #关于JavaScriptCore
 
@@ -132,6 +133,8 @@ ObjectiveC与Js交互是常见的需求，可对于新手或者所谓的高手�
 我们是通过webView的valueForKeyPath获取的，其路径为`documentView.webView.mainFrame.javaScriptContext`。
 这样就可以获取到JS的context，然后为这个context注入我们的模型对象。
 
+**注意：**每次页面载入都要更新jsContext，否则将没有注入。但是这种做法有一个不好的地方就是，页面没有载入完成并不能注入JS对象到JS端，那么H5页面想要在页面载入时就手动调用JS代码就不可以了！
+
 我们先写两个JS方法：
 
 ```
@@ -194,9 +197,16 @@ ObjectiveC与Js交互是常见的需求，可对于新手或者所谓的高手�
 
 获取我们在HTML中定义的jsParamFunc方法，然后调用它并传了一个字典作为参数。
 
+#小结
+
+1. 在多个web页面之间，每次页面载入完成时，都要注入JS对象（通过JSContext），才能保证每个页面都可以让OC与JS端可以交互。
+2. 通过JSContext页面可以让OC与JS交互，但是H5端并不能在页面载入完成前调用OC的代码，因此此时还没有注入JS对象。即使在webViewDidFinishLoad时就注入，对象也没有并不存在。
+
+
+
 #源代码
 
-好了，就讲这么多吧，如果想要Demo源代码，请到github下载：**[https://github.com/CoderJackyHuang/IOSCallJsOrJsCallIOS](https://github.com/CoderJackyHuang/IOSCallJsOrJsCallIOS)**
+好了，就讲这么多吧，如果想要Demo源代码，请到github下载：**[IOSCallJsOrJsCallIOS](https://github.com/CoderJackyHuang/IOSCallJsOrJsCallIOS)**
 
 #推荐阅读
 

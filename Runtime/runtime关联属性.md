@@ -1,15 +1,13 @@
->#[原文出自：标哥的技术博客](http://www.henishuo.com/runtime-association/)
-
-
 #前言
 
----
-在开发中经常需要给已有的类扩展添加方法和属性，但是`Objective-C`是不允许给已有类扩展属性的，因为类扩展是不会自动生成成员变量的。但是，苹果提供了`runtime`，我们可以通过`runtime`使用关联`API`就可以做到了。
 
-#关联API介绍
+在开发中经常需要给已有的类添加方法和属性，但是`Objective-C`是不允许给已有类通过分类添加属性的，因为类分类是不会自动生成成员变量的。但是，我们可以通过运行时机制就可以做到了。
 
----
-我们先看看关联API，只有这三个API，使用也是非常简单的：
+本篇文章适合新手阅读，手把手教你如何在项目中使用关联属性！
+
+#API介绍
+
+我们先看看Runtime提供的关联API，只有这三个API，使用也是非常简单的：
 
 ```
 /** 
@@ -54,9 +52,9 @@ id objc_getAssociatedObject(id object, const void *key)
 void objc_removeAssociatedObjects(id object)
 ```
 
-实际上，我们几乎不会使用到`objc_removeAssociatedObjects`函数，这个函数的功能是移除指定的对象上所有的关联。
+实际上，我们几乎不会使用到`objc_removeAssociatedObjects`函数，这个函数的功能是移除指定的对象上所有的关联。既然我们要添加关联属性，几乎不会存在需要手动取消关联的场合。
 
-##设置关联值
+#设置关联值（Setter）
 
 
 对于设置关联，我们需要使用下面的API关联起来：
@@ -72,7 +70,7 @@ void objc_setAssociatedObject(id object, const void *key, id value, objc_Associa
 * `value`：关联所设置的值
 * `policy`：内存管理策略，比如使用`copy`
 
-##获取关联值
+#获取关联值（Getter）
 
 如果我们要获取所关联的值，需要通过`key`来获取，调用如下函数：
 
@@ -85,7 +83,7 @@ id objc_getAssociatedObject(id object, const void *key)
 * `object`：与谁关联，通常是传`self`，在设置关联时所指定的与哪个对象关联的那个对象
 * `key`：唯一键，在设置关联时所指定的键
 
-##关联策略
+#关联策略
 
 我们先看看设置关联时所指定的`policy`，它是一个枚举类型，看官方说明：
 
@@ -108,15 +106,14 @@ typedef OBJC_ENUM(uintptr_t, objc_AssociationPolicy) {
 ```
 我们说明一下各个值的作用：
 
-* OBJC_ASSOCIATION_ASSIGN：表示弱引用关联，通常是基本数据类型，如`int`、`float`
-* OBJC_ASSOCIATION_RETAIN_NONATOMIC：表示强（strong）引用关联对象
-* OBJC_ASSOCIATION_COPY_NONATOMIC：表示关联对象copy
-* OBJC_ASSOCIATION_RETAIN：表示强（strong）引用关联对象，但不是线程安全的
-* OBJC_ASSOCIATION_COPY：表示关联对象copy，但不是线程安全的
+* OBJC\_ASSOCIATION\_ASSIGN：表示弱引用关联，通常是基本数据类型，如`int`、`float`，非线程安全
+* OBJC\_ASSOCIATION\_RETAIN\_NONATOMIC：表示强（strong）引用关联对象，非线程安全
+* OBJC\_ASSOCIATION\_COPY\_NONATOMIC：表示关联对象copy，非线程安全
+* OBJC\_ASSOCIATION\_RETAIN：表示强（strong）引用关联对象，是线程安全的
+* OBJC\_ASSOCIATION\_COPY：表示关联对象copy，是线程安全的
 
 #扩展属性
 
----
 我们来写一个例子，扩展`UIControl`添加Block版本的`TouchUpInside`事件。
 
 扩展头文件声明：
@@ -177,27 +174,9 @@ static const void *sHYBUIControlTouchUpEventBlockKey = "sHYBUIControlTouchUpEven
 
 使用起来很简单吧！！！
 
-#写在最后
+#小结
 
----
 本文章是专门介绍通过runtime如何给已有类添加扩展属性，如果文章中出现有疑问的地方，请在评论中评论，笔者会在第一时间回复您的！
 
-且看且珍惜！！！
+本篇文章中所提到的只是最常见的添加关联属性的方式之一，对于生成只读的关联属性也是很常用的，自行实现一下吧！
 
-#关注我
-
----
-如果在使用过程中遇到问题，或者想要与我交流，可加入有问必答**QQ群：[324400294]()**
-
-关注微信公众号：[**iOSDevShares**]()
-
-关注新浪微博账号：[标哥Jacky](http://weibo.com/u/5384637337)
-
-#支持并捐助
-
----
-如果您觉得文章对您很有帮忙，希望得到您的支持。您的捐肋将会给予我最大的鼓励，感谢您的支持！
-
-支付宝捐助      | 微信捐助
-------------- | -------------
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/alipay-e1451124478416.jpg) | ![image](http://www.henishuo.com/wp-content/uploads/2015/12/weixin.jpg)

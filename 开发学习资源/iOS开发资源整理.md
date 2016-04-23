@@ -5,6 +5,10 @@
 
 # 下拉刷新
 
+几乎所有的App都需要到下拉刷新和上拉加载更多的功能，下面是大家都在使用的开源库，其中国人写的MJRefresh是非常流行的哦。
+
+如果自己有能力的话，不仿自己写一个框架。针对App定制独特的风格。
+
  * [EGOTableViewPullRefresh](https://github.com/enormego/EGOTableViewPullRefresh) - 最早的下拉刷新控件。
  * [SVPullToRefresh](https://github.com/samvermette/SVPullToRefresh) - 下拉刷新控件。 
  * [MJRefresh](https://github.com/CoderMJLee/MJRefresh) - 仅需一行代码就可以为UITableView或者CollectionView加上下拉刷新或者上拉刷新功能。可以自定义上下拉刷新的文字说明。具体使用看“使用方法”。 （国人写）
@@ -34,6 +38,8 @@
 
 # 模糊效果
 
+在iOS7以后，苹果就提供了一个生成模糊效果的类了。如果不需要支持ios6，可以直接使用系统的控件。当然，想要更好看些，就需要使用第三方了！
+
  * [FXBlurView](https://github.com/nicklockwood/FXBlurView) - 是一个UIView子类，支持iOS5.0以上版本，支持静态、动态模糊效果，继承与UIView的模糊特效。
  * [VVBlurPresentation](https://github.com/onevcat/VVBlurPresentation) -很简单易用的在原来viewconntroller基础上做模糊，然后present新的viewcontroller的。
  * [UICustomActionSheet](https://github.com/pchernovolenko/UICustomActionSheet) - 通过模糊背景来着重强调与菜单相关的元素--对话框 里面已经收藏。
@@ -41,6 +47,8 @@
  * [Blurable.swift](https://github.com/FlexMonkey/Blurable) - swift模糊组件。
 
 # AutoLayout
+
+自动布局是大势所趋，大家都必须掌握的。笔者最喜欢的就是Masonry了，还针对它写了一个专题如何去使用。
 
  * [Masonry](https://github.com/Masonry/Masonry) - Masonry是一个轻量级的布局框架，拥有自己的描述语法，采用更优雅的链式语法封装自动布局，简洁明了并具有高可读性（ [使用介绍1](http://adad184.com/2014/09/28/use-masonry-to-quick-solve-autolayout/)  [使用介绍2](http://ios.jobbole.com/81483/)），[iOS自适应前段库-Masonry的使用](http://www.cocoachina.com/ios/20150702/12217.html)），[Masonry、Classy、ClassyLiveLayout介绍](http://www.jianshu.com/p/2ed5f7444900)。[使用DEMO](https://github.com/lcddhr/DDMasonryTest) 视图居中显示、子视图含边距、视图等距离摆放、计算ScrollView的contentsize。[标哥的技术博客有14篇关于Masonry的使用教程](http://www.henishuo.com/category/autolayout/)。
  * [HYBMasonryAutoCellHeight](http://www.henishuo.com/masonry-cell-height-auto-calculate/) - HYBMasonryAutoCellHeight是基于Masonry的扩展，用于自动计算cell的行高，且带有缓存功能
@@ -61,7 +69,8 @@ Deprecated in favor of PureLayout, which includes OS X support:https://github.co
 
 # 富文本
 
- * [RTLabel](https://github.com/bingxue314159/RTLabel) - 富文本，RTLabel支持64位。 现在我们项目里面使用到，他人引入的，为此我还改了几个BUG。建议大家别使用这个了。
+如果项目中需要操作富文本，下面的库就是你的宝贝！
+
  * [TYAttributedLabel](https://github.com/12207480/TYAttributedLabel) -  TYAttributedLabel。 简单易用的属性文本控件(无需了解CoreText)，支持富文本，图文混排显示，支持添加链接，image和UIView控件，支持自定义排版显示。
  * [TQRichTextView](https://github.com/TinyQ/TQRichTextView) - 用于做富文本视图控件显示，用于即时通讯的表情显示，以及资源评论的富文本显示。
  * [TTTAttributedLabel](https://github.com/mattt/TTTAttributedLabel) - 一个文字视图开源组件，是UILabel的替代元件，可以以简单的方式展现渲染的属性字符串。另外，还支持链接植入，不管是手动还是使用UIDataDetectorTypes自动把电话号码、事件、地址以及其他信息变成链接。[用TTTAttributedLabel创建变化丰富的UILabel](http://blog.csdn.net/prevention/article/details/9998575) - 网易新闻iOS版使用。
@@ -95,6 +104,8 @@ Deprecated in favor of PureLayout, which includes OS X support:https://github.co
 
 # 图表
 
+对于图表操作，不依赖第三库的话，想必难度很大。下面的库也许会让你满意。如果不太满意，可以改写。
+
  * [PNChart](https://github.com/kevinzhow/PNChart) - 国内开源作者，动态的图表。
  * [swift-linechart](https://github.com/zemirco/swift-linechart) - 功能完整、实用的折线图组件。使用方便，参数配置简单。是不可多得的优质组件--swift。
  * [ios-charts](https://github.com/danielgindi/ios-charts) - 一款优秀 Android 图表开源库 MPAndroidChart 的 Swift 语言实现版（支持 Objective-C 和 Swift 调用）。缺省提供的示例代码为 Objective-C。
@@ -103,6 +114,9 @@ Deprecated in favor of PureLayout, which includes OS X support:https://github.co
  * [RealtimeGradientText](https://github.com/kevinzhow/RealtimeGradientText) - Fun With CALayer Mask 刚好今天开源了一个有趣的项目 RealtimeGradientText，所以也好聊一下 CALayer 的 Mask，[说明](http://blog.zhowkev.in/2015/07/06/fun-with-mask/)。
 
 # 表相关与Tabbar
+
+对于tableview，这个算是神器了。不过在collectionview出来之后，tableview的能力明显没有那么突出了。
+
  * [SWTableViewCell](https://github.com/onevcat/SWTableViewCell) - 国内开源作者，带很多手势的表单元格。
  * [MCSwipeTableViewCell](https://github.com/alikaragoz/MCSwipeTableViewCell) - 带很多手势的表单元格。
  * [TMQuiltView](https://github.com/1000Memories/TMQuiltView) - 瀑布流。
@@ -153,12 +167,17 @@ Deprecated in favor of PureLayout, which includes OS X support:https://github.co
 
 # 隐藏与显示
 
+导航条的隐藏与显示问题，有不少app中经常出现有这样的效果，如果你的app也需要这样的效果，这里的库也许能帮助到你！
+
  * [SlideTapBar](http://d.cocoachina.com/code/detail/286102) - 滚动栏菜单，向上滚动时隐藏tabbar，向下滚动马上显示tabbar。
  * [FoldingTabBar.iOS](https://github.com/Yalantis/FoldingTabBar.iOS) - 可折叠Tab Bar和Tab Bar Controller。
  * [LTNavigationBar](https://github.com/ltebean/LTNavigationBar) - LTNavigationBar为app导航栏添加动态着色效果，可自定义其背景色。Demo包含：1.变换背景色；2.滚动视图，导航栏和状态栏重叠。
  * [BLKFlexibleHeightBar](https://github.com/bryankeller/BLKFlexibleHeightBar) - 固定Header的效果库，一个拥有非常灵活高度的标题栏，可以为使用软件的用户提供更多的阅读和滑动空间，现在已经被众多app所采用。
 
 # HUD与Toast
+
+Toast提示是必不可少的，所有的app都需要到。除非设计要求自己定制，不然都会采用第三方！
+
  * [MBProgressHUD](https://github.com/jdg/MBProgressHUD) - 最多人用的loading。
  * [EBuyCommon](https://github.com/LvJianfeng/EBuyCommon) - 1.基于MBProgressHUD实现得图形加载提示方式，及其它标题方式提醒。2.弹窗。
  * [SVProgressHUD](https://github.com/TransitApp/SVProgressHUD) - SVProgressHUD的loading，如果你需要定制化的等待提示器，这个就是了（也许是最好的）。
@@ -167,6 +186,8 @@ Deprecated in favor of PureLayout, which includes OS X support:https://github.co
  * [WSProgressHUD](https://github.com/devSC/WSProgressHUD) - 一个小巧精致的HUD,支持添加到自定义View上, 还有更多小细节.。
 
 # 对话框
+
+如果系统的alertview效果不能满足你，相信这么多开源库会有让你满意的！
 
  * [WCAlertView](https://github.com/m1entus/WCAlertView) - 自定义的对话框。
  * [IOS7AlertView](https://github.com/wimagguc/ios-custom-alertview) - IOS7AlertView的对话框。
@@ -190,6 +211,9 @@ Deprecated in favor of PureLayout, which includes OS X support:https://github.co
  * [GSAlert.swfit](https://github.com/wxxsw/GSAlert) - 苹果在iOS8推出了全新的UIAlertController，旧的UIAlertView和UIActionSheet渐渐被废弃，但如果你仍然支持iOS7系统，你将不得不写两套代码。GSAlert解决了这个问题。
 
 # 其他UI
+
+对于一些特殊的动画效果，可以参考参考！
+
  * [AwesomeMenu](https://github.com/levey/AwesomeMenu) - 最多人用的Path菜单。
  * [DCPathButton](https://github.com/Tangdixi/DCPathButton) - Path，4.0的弹出菜单，呼出或者关闭菜单时，多个小图标会分别按照逆时针和顺时针的方向进行滚动。
  * [SphereMenu](https://github.com/itouch2/SphereMenu) - 利用UIDynamicAnimator的有趣的菜单，path类似。 
@@ -281,6 +305,8 @@ Deprecated in favor of PureLayout, which includes OS X support:https://github.co
 
 
 # 动画
+
+动画是app给予用户最直接的体验，看看有什么可以帮助你的！
 
 * [Core Animation教程，当前共9篇](http://www.henishuo.com/category/ios-animation-series/) - 从CALayer讲起，到Core Animation
  * [Core Animation笔记，基本的使用方法](http://www.starming.com/index.php?v=index&view=62) - Core Animation笔记，基本的使用方法：1.基本动画，2.多步动画，3.沿路径的动画，4.时间函数，5.动画组。
@@ -390,13 +416,12 @@ Deprecated in favor of PureLayout, which includes OS X support:https://github.co
 
 
 # 网络相关
-# 网络连接
+
 * [AFNetworking](https://github.com/AFNetworking/AFNetworking) - ASI不升级以后，最多人用的网络连接开源库，[iOS网络编程之AFNetworking使用](http://www.superqq.com/blog/2014/11/07/ioswang-luo-bian-cheng-zhi-afnetworkingshi-yong/),[iOS开发下载文件速度计算](http://www.superqq.com/blog/2015/01/29/ioskai-fa-xia-zai-wen-jian-su-du-ji-suan/) , [AFNetworking 3.0迁移指南](http://www.cocoachina.com/ios/20151022/13831.html) , [AFNetworking2.0源码解析<一>](http://www.cocoachina.com/ios/20140829/9480.html) 、[AFNetworking2.0源码解析<二>](http://www.cocoachina.com/ios/20140904/9523.html)、[AFNetworking源码解析<三>](http://www.cocoachina.com/ios/20140916/9632.html)、[AFNetworking源码解析<四>](http://www.cocoachina.com/ios/20141120/10265.html)。
 * [Alamofire](https://github.com/Alamofire/Alamofire) - Alamofire是AFNetworking的作者mattt新写的网络请求的swift库。
 * [HYBNetworking](http://www.henishuo.com/base-on-afnetworking-wrapper/) - 有两个基础版本，分别是基于AFNetworking2.5.2和3.0而写的, 目前已经提供了通用的GET/POST、上传、下载API等。
 * [YTKNetwork](https://github.com/yuantiku/YTKNetwork) - 是基于 AFNetworking 封装的 iOS网络库，提供了更高层次的网络访问抽象。相比AFNetworking，YTKNetwork提供了以下更高级的功能：按时间或版本号缓存网络请求内容、检查返回 JSON 内容的合法性、文件的断点续传、批量的网络请求发送、filter和插件机制等。
-* [HYBNetworking](https://github.com/CoderJackyHuang/HYBNetworking) - 基于AFN封装的网络库，可以通用。[基于AFNetworking封装网络库说明](http://www.henishuo.com/base-on-afnetworking-wrapper/)
-* [LxFTPRequest](https://github.com/DeveloperLx/LxFTPRequest) - 支持获取FTP服务器资源列表，下载/上传文件，创建/销毁ftp服务器文件/目录，以及下载断点续传，下载/上传进度，自动判断地址格式合法性跟踪等功能！国人开发，QQ：349124555。
+* [HYBNetworking](https://github.com/CoderJackyHuang/HYBNetworking) - 基于AFN3.0封装的网络库，可以通用，目前已有近200app在使用。[基于AFNetworking封装网络库说明](http://www.henishuo.com/base-on-afnetworking-wrapper/)
 * [HSDownloadManager](https://github.com/HHuiHao/HSDownloadManager) - HSDownloadManager，下载音乐、视频、图片各种资源，支持多任务、断点下载。
 * [MutableUploadDemo](https://github.com/HHuiHao/MutableUploadDemo) - 模拟需求：图文混编，要求用户选择图片后就上传，可选择多图，并行上传，用户确定提交后后台执行，必须全部图片上传完才能提交文字。
 * [WTRequestCenter](https://github.com/swtlovewtt/WTRequestCenter) - 方便缓存的请求库，提供了方便的HTTP请求方法，传入请求url和参数，返回成功和失败的回调。 UIKit扩展提供了许多不错的方法，快速缓存图片，图片查看，缩放功能， 颜色创建，设备UUID，网页缓存，数据缓存等功能。 无需任何import和配置，目前实现了基础需求。
@@ -449,13 +474,18 @@ Deprecated in favor of PureLayout, which includes OS X support:https://github.co
 
 # WebView
 
+现在很多app都使用webview来加载内容，以便支持多平台！
+
+* [iOS与JS交互专题](http://www.henishuo.com/category/ios-h5-js/) 这里是UIWebView/WKWebView与JS交互的专题教程
 * [MGTemplateEngine](https://github.com/mattgemmell/MGTemplateEngine) - MGTemplateEngine比较象 PHP 中的 Smarty、FreeMarker 和 Django的模版引擎，是一个轻量级的引擎，简单好用。只要设置很多不同的HMTL模版，就能轻松的实现一个View多种内容格式的显示，对于不熟悉HTML或者减轻 工作量而言，把这些工作让设计分担一下还是很好的，也比较容易实现设计想要的效果。
 * [NJKWebViewProgress](https://github.com/ninjinkun/NJKWebViewProgress) - 一个 UIWebView 的进度条接口库,UIWebView 本身是不提供进度条的。 
 * [GTMNSString-HTML](https://github.com/siriusdely/GTMNSString-HTML) - 谷歌开源的用于过滤HTML标签。 
-* [js-in-ios](https://github.com/WangXiaoxi/IOSLearing/) - webView与js的交互。 
+ 
 
 
 # Model
+
+模型与字典互转的库，这是必不可少的！
 
  * [JSONKit](https://github.com/johnezang/JSONKit) - JSONKit库是非常简单易用而且效率又比较高的，重要的JSONKit适用于ios 5.0以下的版本,使用JSONKit库来解析json文件，只需要下载JSONKit.h 和JSONKit.m添加到工程中；然后加入libz.dylib即可。
  * [JSONModel](https://github.com/icanzilb/JSONModel) - 解析服务器返回的Json数据的库,[JSONModel源码解析一](http://www.jianshu.com/p/3d795ea37835)。
@@ -586,6 +616,7 @@ Deprecated in favor of PureLayout, which includes OS X support:https://github.co
 
 
 # 数据库
+
  * [FMDB](https://github.com/ccgus/fmdb) - sqlite的工具， [多线程FMDatabaseQueue实例](https://github.com/tangqiaoboy/FmdbSample)，[FMDB数据库的使用演示和封装工具类](https://github.com/liuchunlao/LVDatabaseDemo)，[基于fmdb 的基本操作](http://code.cocoachina.com/view/128312) 通过 fmdb 进行的数据库的 基本操作(增删改查 )查找是使用 UISearchBar 和UISearchDisplayController 进行混合使用。
  * [GXDatabaseUtils](https://github.com/Gerry1218/GXDatabaseUtils) - 在FMDB基础上的工具。
  * [realm-cocoa](https://github.com/realm/realm-cocoa) - Realm是一个真正为移动设备打造的数据库，同时支持Objective-C和Swfit。Realm宣称其相比Sqlite，在移动设备上有着更好的性能表现,[官方中文](https://realm.io/cn/) ，[iOS：选择 Realm 而不是 CoreData](http://swift.gg/2015/12/08/ios-realm-instead-of-coredata/), [使用 Realm 和 Swift 创建 ToDo 应用](http://swift.gg/2015/12/08/building-a-todo-app-using-realm-and-swift/)。
@@ -660,6 +691,7 @@ Deprecated in favor of PureLayout, which includes OS X support:https://github.co
 
 
 # 摄像照相视频音频处理
+
  * [SCRecorder](https://github.com/rFlex/SCRecorder) - SCRecorder 短视频录制。
  * [VideoPushDemo](https://github.com/pingguo-zangqilong/VideoPushDemo) - 视频剪辑 [视频特效制作1](http://www.jianshu.com/p/3006502912aa) [视频特效制作2](http://www.jianshu.com/p/6313025349a9)。
  * [LLSimpleCamera](https://github.com/omergul123/LLSimpleCamera) - A simple, customizable camera control for iOS， 摄像头。
@@ -896,7 +928,7 @@ http://tangqiaoboy.gitcafe.io/blog/2014/05/25/use-cocoapod-to-manage-ios-lib-dep
 
 #搜集来源
 
-github排名 [https://github.com/trending](https://github.com/trending)
+github排名： [https://github.com/trending](https://github.com/trending)
 
 github搜索：[https://github.com/search](https://github.com/search)
 
@@ -904,27 +936,3 @@ github搜索：[https://github.com/search](https://github.com/search)
 
 本篇文章持续收集整理，文章中的内容来源于四面八方，希望大家看到好资源时，在评论中回复，笔者会统一整理到文中。
 
-#关注我
-
-
-**Swift/ObjC技术群一：[324400294(已满)]()**
-
-**Swift/ObjC技术群二：[494669518]()**
-
-**ObjC/Swift高级群：[461252383]()**
-
-关注微信公众号：[**iOSDevShares**]()
-
-关注新浪微博账号：[标哥Jacky](http://weibo.com/u/5384637337)
-
-标哥的GITHUB地址：[CoderJackyHuang](https://github.com/CoderJackyHuang)
-
-
-#支持并捐助
-
-
-如果您觉得文章对您很有帮忙，希望得到您的支持。您的捐肋将会给予我最大的鼓励，感谢您的支持！
-
-支付宝捐助      | 微信捐助
-------------- | -------------
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/alipay-e1451124478416.jpg) | ![image](http://www.henishuo.com/wp-content/uploads/2015/12/weixin.jpg)

@@ -2,11 +2,8 @@
 
 `iOS 7`以后提供了自定义转场动画的功能，我们可以通过遵守协议完成自定义转场动画。本篇文章讲解如何实现自定义`present`、`dismiss`自定义动画。
 
->**关于自定义`push/pop`转场动画，请阅读[iOS 7 push/pop自定义转场动画](http://www.henishuo.com/ios7-pushpop-transitioning/)**
-
 #效果图
 
----
 本篇文章实现的动画切换效果图如下：
 
 ![image](http://www.henishuo.com/wp-content/uploads/2015/12/modal.gif)
@@ -21,7 +18,6 @@
 
 #协议
 
----
 我们要实现`present`、`dismiss`自定义转场效果，我们必须要有一个遵守了`UIViewControllerAnimatedTransitioning`协议且实现其必须实现的代理方法的类。
 
 我们先来学习`UIViewControllerAnimatedTransitioning`协议：
@@ -29,21 +25,24 @@
 ```
 @protocol UIViewControllerAnimatedTransitioning <NSObject>
 
-// This is used for percent driven interactive transitions, as well as for container controllers that have companion animations that might need to
+// This is used for percent driven interactive transitions, as well as for container 
+// controllers that have companion animations that might need to
 // synchronize with the main animation.
 // 
 // 指定转场动画时长，必须实现，否则会Crash。
 // 这个方法是为百分比驱动的交互转场和有对比动画效果的容器类控制器而定制的。
 - (NSTimeInterval)transitionDuration:(nullable id <UIViewControllerContextTransitioning>)transitionContext;
 
-// This method can only  be a nop if the transition is interactive and not a percentDriven interactive transition.
+// This method can only  be a nop if the transition is interactive 
+// and not a percentDriven interactive transition.
 // 若非百分比驱动的交互过渡效果，这个方法只能为空
 - (void)animateTransition:(id <UIViewControllerContextTransitioning>)transitionContext;
 
 
 @optional
 
-// This is a convenience and if implemented will be invoked by the system when the transition context's completeTransition: method is invoked.
+// This is a convenience and if implemented will be invoked by the system 
+// when the transition context's completeTransition: method is invoked.
 - (void)animationEnded:(BOOL) transitionCompleted;
 
 @end
@@ -53,7 +52,7 @@
 
 #遵守UIViewControllerAnimatedTransitioning协议
 
----
+
 下面，我们来定义一个转场类，这个类必须要遵守`UIViewControllerAnimatedTransitioning`协议，如下：
 
 ##头文件
@@ -227,11 +226,10 @@ typedef NS_ENUM(NSUInteger, HYBModalTransitionType) {
 @end
 ```
 
-我们这里就不细讲了，因为在[iOS 7 push/pop自定义转场动画](http://www.henishuo.com/ios7-pushpop-transitioning/)中已经讲过了。大家若未看过，可以先阅读。
+我们这里就不细讲了，因为在[iOS 7 push/pop转场动画](http://www.henishuo.com/ios7-pushpop-transitioning/)中已经讲过了。大家若未看过，可以先阅读。
 
 #测试效果
 
----
 
 我们要设置一下被`present`的控制器的代理，在`-viewDidLoad:`时添加如下代码：
 
@@ -260,7 +258,6 @@ self.modalPresentationStyle =  UIModalPresentationCustom;
 
 #写在最后
 
----
 初步研究这方面的知识，最近要做技术分享，正好也好好研究研究，如果写得不好，希望大家不要笑话！！！
 
 其它转场效果，后续会分享出来！！！
@@ -269,19 +266,13 @@ self.modalPresentationStyle =  UIModalPresentationCustom;
 
 其它转场效果，后续会分享出来！！！
 
-
 #源代码
 
----
-小伙伴们可以到笔者的`github`下载：[https://github.com/CoderJackyHuang/ModalTransitionDemo](https://github.com/CoderJackyHuang/ModalTransitionDemo)
+小伙伴们可以到笔者的github下载：[ModalTransitionDemo](https://github.com/CoderJackyHuang/ModalTransitionDemo)
 
 **请随手给一个star吧！！！**
 
-#[阅读原文](http://www.henishuo.com/ios-7-presentdismiss-transitioning/)
+#推荐阅读
 
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/)**
+* [iOS 7 push/pop转场动画一](http://www.henishuo.com/ios7-pushpop-transitioning/)
 

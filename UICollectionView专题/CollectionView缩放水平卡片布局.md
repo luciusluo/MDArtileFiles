@@ -73,14 +73,22 @@ scaleFactor因子可以自由调整，值越大，显示就越大。
 
 ```
 - (CGPoint)targetContentOffsetForProposedContentOffset:(CGPoint)proposedContentOffset withScrollingVelocity:(CGPoint)velocity {
-  // 分页以1/3处
-  if (proposedContentOffset.x > self.previousOffsetX + self.itemSize.width / 3.0) {
-    self.previousOffsetX += self.collectionView.frame.size.width - self.minimumLineSpacing * 2;
-  } else if (proposedContentOffset.x < self.previousOffsetX  - self.itemSize.width / 3.0) {
-    self.previousOffsetX -= self.collectionView.frame.size.width - self.minimumLineSpacing * 2;
+  BOOL pagingEnabled = NO;
+  if (pagingEnabled) {
+    // 分页以1/3处
+    if (proposedContentOffset.x > self.previousOffsetX + self.itemSize.width / 3.0) {
+      self.previousOffsetX += self.collectionView.frame.size.width - self.minimumLineSpacing * 2;
+    } else if (proposedContentOffset.x < self.previousOffsetX  - self.itemSize.width / 3.0) {
+      self.previousOffsetX -= self.collectionView.frame.size.width - self.minimumLineSpacing * 2;
+    }
+    
+    proposedContentOffset.x = self.previousOffsetX;
+  } else {
+    CGFloat x = proposedContentOffset.x / (self.itemSize.width + self.minimumLineSpacing);
+    int base = (int)x;
+    
+    proposedContentOffset.x = base * (self.itemSize.width + self.minimumLineSpacing);
   }
-  
-  proposedContentOffset.x = self.previousOffsetX;
   
   return proposedContentOffset;
 }
@@ -88,9 +96,15 @@ scaleFactor因子可以自由调整，值越大，显示就越大。
 
 这里是以1/3.0为分界，左、右的1/3作为分界线，超过才会切换过去！
 
+#感谢
+
+感谢评论的朋友们的一句话，点醒了笔者。对于不分页的情况下，其实只要使用当前的偏移x除(itemSize.width + minimumLineSpacing)就得到一个倍数，然后四舍五入。比如，4.3取整得到4，那么就是没有超过一半，就要往回滚。而4.6取整得到5，表示要滚动到下一个。所以在不分页的情况下，其实也是非常简单的。
+
+
 #结尾
 
-如果没有使用分页的特性，那么如何计算出proposedContentOffset值呢？这个比较复杂，这里没有写出来，还是需要再深入研究的！然后他人在笔者的demo之上，能够去完善它并分享给笔者。
+本篇文章经过朋友们的评论及反馈，可以说已经完善了！
+
 
 #源代码
 

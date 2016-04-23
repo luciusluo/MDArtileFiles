@@ -1,13 +1,13 @@
 #前言
 
----
-相信很多朋友都使用了友盟统计这个`SDK`吧，能够统计出我们崩溃的日志，但是反馈的日志是无法确定到底是哪里发生崩溃的，那么我们如何去查呢？
 
-`dYSM`是打包的时候生成的，位于`/Users/<用户名>/Library/Developer/Xcode/Archives`下，找到它就可以拿友盟统计上的错误日志来查找崩溃在程序的哪个类哪行代码了。不过，这不是绝对的，有的日志是查不到崩溃在何处的。
+相信很多朋友都使用了友盟统计这个SDK吧，能够统计出我们崩溃的日志，但是反馈的日志是无法确定到底是哪里发生崩溃的，那么我们如何去查呢？
+
+dYSM是打包的时候生成的，位于/Users/<用户名>/Library/Developer/Xcode/Archives下，找到它就可以拿友盟统计上的错误日志来查找崩溃在程序的哪个类哪行代码了。不过，这不是绝对的，有的日志是查不到崩溃在何处的。
 
 #查找dYSM文件
 
----
+
 在友盟统计上，错误日志这里会有应用的版本号，我们要根据这个版本号，找到我们对应的`ipa`包，然后找到`dYSM`文件。在错误日志的下位，有出错的版本号，出错的次数，出错的首次日期，最后一次出现的日期。
 
 如下：
@@ -21,13 +21,12 @@
 appName 15-11-27 上午11.02.xcarchive
 ```
 
-这个是路径，改成自己电脑的用户名：`/Users/huangyibiao/Library/Developer/Xcode/Archives/`。最后，我们就是需要找到这个：`appName 15-11-27 上午11.02.xcarchive`
+这个是路径，改成自己电脑的用户名：/Users/huangyibiao/Library/Developer/Xcode/Archives/。最后，我们就是需要找到这个：appName 15-11-27 上午11.02.xcarchive
 
 得到了这个东西，接下来就好办了！
 
 #学习分析日志
 
----
 如下为友盟统计的一个错误日志：
 
 ```
@@ -81,7 +80,7 @@ Base Address: 0x00000001000e4000
 dwarfdump --arch=arm64 --lookup 0x1003dcb3c /Users/huangyibiao/Desktop/dSYMs/3.2.2\(10482\) appName\ 15-11-27\ 19.16.xcarchive/dSYMs/appName/Contents/Resources/DWARF/appName
 ```
 
->注意：`appName`为自己应用的名称
+**注意**：`appName`为自己应用的名称
 
 然后一回车，我们得到类似如下的信息：
 
@@ -121,7 +120,6 @@ Line table file: 'HYBTestController.m' line 369, column 1 with start address 0x0
 
 #通常无法定位错误的日志
 
----
 像这种日志：
 
 ```
@@ -167,20 +165,12 @@ Looking up address: 0x0000000100869714 in .debug_frame... not found.
 
 查找地址失败，因此无法定位具体是哪里有问题，也就无法解决了。
 
-#写在最后
+#结尾
 
----
-如果大家有对于上面这种查找不到地址的问题的解决方案，请在评论中回复一下，谢谢！！！
+其实通过友盟所收集到的bug不都是可解的。有的时候可能是友盟自身所产生的，但是那不是bug，而是友盟的处理事件。
 
-如果大家有对于上面这种查找不到地址的问题的解决方案，请在评论中回复一下，谢谢！！！
+当然，有的时候可能是我们所使用的第三方SDK所引起的，比如百度地图等，对于类似这样的问题，通过的解决办法就是尝试升级SDK。如果SDK已经是最新，那么只能通过反馈到对应的平台了！
 
-如果大家有对于上面这种查找不到地址的问题的解决方案，请在评论中回复一下，谢谢！！！
 
-#[阅读原文](http://www.henishuo.com/dsym-crash-analyze/)
 
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/)**
 

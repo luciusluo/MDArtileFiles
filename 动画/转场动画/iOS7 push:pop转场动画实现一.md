@@ -1,9 +1,11 @@
 #前言
 
----
+
 `iOS 7`之后，苹果提供了自定义转场动画的`API`，我们可以自己去定义任意动画效果。本篇为笔者学习`push`、`pop`自定义转场效果的笔记，如何有任何不正确或者有指导意见的，请在评论中留下您的宝贵意见！！！
 
->请注意：如果要求支持`iOS 7`以下版本，则不可使用此效果。
+**请注意：**如果要求支持`iOS 7`以下版本，则不可使用此效果。
+
+#实现目标效果
 
 我们本篇文章目标效果：
 
@@ -20,7 +22,6 @@
 
 #协议
 
----
 我们要实现`push`、`pop`自定义转场效果，我们必须要有一个遵守了`UIViewControllerAnimatedTransitioning`协议且实现其必须实现的代理方法的类。
 
 我们先来学习`UIViewControllerAnimatedTransitioning`协议：
@@ -346,29 +347,17 @@ YES
 
 #写在最后
 
----
-从来没有研究过这方面的知识，最近要做技术分享，正好也好好研究研究，如果写得不好，希望大家不要笑话！！！
 
-其它转场效果，后续会分享出来！！！
-
-其它转场效果，后续会分享出来！！！
-
-其它转场效果，后续会分享出来！！！
-
+本篇文章的转场效果已经实现了，大家可以一起来学习哦！如果写有更多更好看的转场效果，请一定要分享出来哦！
 
 #源代码
 
----
-小伙伴们可以到笔者的`github`下载：[https://github.com/CoderJackyHuang/PushPopTransitionDemo](https://github.com/CoderJackyHuang/PushPopTransitionDemo)
+
+小伙伴们可以到笔者的`github`下载：[PushPopTransitionDemo](https://github.com/CoderJackyHuang/PushPopTransitionDemo)
 
 **请随手给一个star吧！！！**
 
-#[阅读原文](http://www.henishuo.com/ios7-pushpop-transitioning/)
+#推荐阅读
 
-
-#关注我
-
----
-**微信公众号：[iOSDevShares](http://www.henishuo.com/)**<br>
-**有问必答QQ群：[324400294](http://www.henishuo.com/)**
+* [present/dismiss转场动画](http://www.henishuo.com/ios-7-presentdismiss-transitioning/)
 
