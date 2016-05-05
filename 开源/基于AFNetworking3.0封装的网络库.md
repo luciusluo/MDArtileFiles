@@ -8,6 +8,15 @@
 
 本篇为**基于AFNetworking3.0以上**的版本，支持iOS7及其以上版本。若要支持iOS6，请阅读旧版本：[基于AFNetworking2.5封装](http://www.henishuo.com/base-on-afnetworking-wrapper/)
 
+#Version 3.2.1
+
+* 完善缓存机制及无网或者网络异常状态下取缓存数据
+
+#Version 3.2.0
+
+* 增加超时设置
+* 增加网络异常时是否读取本地缓存的策略
+
 #升级为3.0版本
 
 * 简化API，以降低使用的要求
