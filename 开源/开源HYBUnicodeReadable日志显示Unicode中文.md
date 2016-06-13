@@ -1,8 +1,11 @@
->#[原文出自：标哥的技术博客](http://www.henishuo.com/ios-unicode-readable/)
 
 #前言
 
 开发中经常需要打印日志以查看数据是否正确，或者说查看数据的格式。但是，苹果对于我们的`NSDictionary`、`NSSet`、`NSArray`等值有中文时，打印出来的是`Unicode`编码，人类无法直接读懂，因此，笔者研究研究如何将打印出来的日志保持原有的格式化且能够将`Unicode`编码打印出来是正常人类可读懂的中文。
+
+#当前版本
+
+* 已升级至最新版：1.2
 
 #实现原理
 
@@ -283,19 +286,3 @@ pod 'HYBUnicodeReadable', '~> 1.0'
 
 **如果觉得赞，请给一个star**
 
-#关注我
-
-
-如果在使用过程中遇到问题，或者想要与我交流，可加入有问必答**QQ群：[324400294]()**
-
-关注微信公众号：[**iOSDevShares**]()
-
-关注新浪微博账号：[标哥Jacky](http://weibo.com/u/5384637337)
-
-#支持并捐助
-
-如果您觉得文章对您很有帮助，希望得到您的支持。您的捐肋将会给予我最大的鼓励，感谢您的支持！
-
-支付宝捐助      | 微信捐助
-------------- | -------------
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/alipay-e1451124478416.jpg) | ![image](http://www.henishuo.com/wp-content/uploads/2015/12/weixin.jpg)
