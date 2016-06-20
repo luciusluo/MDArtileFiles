@@ -12,12 +12,12 @@
 
 我们实现下面的效果图：
 
-![image](https://mmbiz.qlogo.cn/mmbiz/sia5QxFVcFD3pecN4ytLM6qIapriaJ2KiacFhGvy9zz3BbNj2wEbmKXU2cgA18LiaIWcZTIvVrxH4h7aSAHia3JZ1xg/0?wx_fmt=jpeg)
+![image](http://www.henishuo.com/wp-content/uploads/2016/06/0-1.jpeg)
 
 ####第一步：添加`UIScrollView`并布局约束为点满整个`self.view`
 点击右下角的第二个小图标，添加约束如下图：
 
-![image](https://mmbiz.qlogo.cn/mmbiz/sia5QxFVcFD3pecN4ytLM6qIapriaJ2KiacyDNqibQrel8FVkada9RFf4qwNDmZ5q20Q8FWa5IrqMGKWptHYSCLx3g/0?wx_fmt=png)
+![image](http://www.henishuo.com/wp-content/uploads/2016/06/0-2.jpeg)
 
 设置`UIScrollView`的上、下、左、右与`self.view`的上、下、左、右都一致，相当于点满了整个`self.view`。
 
@@ -31,13 +31,14 @@
 **注意：**在使用布局子控件到`UIScrollView`上时，由于`UIScrollView`的right是不确定的，因为`UIScrollView`有`contentSize`，即内容的宽和内容的高。
 
 ####第三步：添加绿色标签(blueLabel)
+
 与第二步差不多，添加前景色等，添加约束为：使blueLabel的leading和width分别等于redLabel的leading和width，再使blueLabel的top等于redLabel的bottom再加上20（间隔）。
 
 ####第四步：添加图片（imgView）
 
 添加图片很简单，设置约束为：width和height值都设置为250，top为blueLabel的bottom再加上20，然后设置水平居中就可以了。看下图：
 
-![image](https://mmbiz.qlogo.cn/mmbiz/sia5QxFVcFD3pecN4ytLM6qIapriaJ2Kiackcm6A4bDaFOj006FAUVhULCmVTTFVcCiaWFkAXrl9Py5HueVj6LqjRw/0?wx_fmt=png)
+![image](http://www.henishuo.com/wp-content/uploads/2016/06/0-3.jpeg)
 
 ####第五步：添加白色标签（whiteLabel）
 
@@ -51,7 +52,7 @@
 
 下面我们来实现下面的布局，使控件平分显示。
 
-![image](https://mmbiz.qlogo.cn/mmbiz/sia5QxFVcFD3pecN4ytLM6qIapriaJ2KiacnuI2zHiaqhk5wVWJoHeszCqaDpJEIeT7mItQt3TgLhuUKjiaLUT8TYhA/0?wx_fmt=jpeg)
+![image](http://www.henishuo.com/wp-content/uploads/2016/06/0-4.jpeg)
 
 ####第一行：如何平分这两个控件使其等宽、等高、间隔20，与self.view的左、右间隔10像素。
 
@@ -189,8 +190,9 @@ avgLabel2.text = @"本控件的约束添加方式为：使right=self.view的righ
 
 #源代码
 
-想要下载源代码，请移步github下载，内有Swift版的工程和ObjC版的工程：<br/>
-[https://github.com/CoderJackyHuang/ScrollViewAutolayoutDemo](https://github.com/CoderJackyHuang/ScrollViewAutolayoutDemo)
+想要下载源代码，请移步github下载，内有Swift版的工程和ObjC版的工程：
+
+* [https://github.com/CoderJackyHuang/ScrollViewAutolayoutDemo](https://github.com/CoderJackyHuang/ScrollViewAutolayoutDemo)
 
 
 

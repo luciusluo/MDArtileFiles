@@ -1,4 +1,6 @@
-半年前在知乎浏览到一个帖子，是关于如何面试iOS工程师。由于当时公司正在招聘iOS工程师，自己也面试了不少同学，就饶有兴致的把自己的面试问题清单贴了出去，却意外的引来了不少关注。还有不少同学认真回答并将答案私信于我交流的，还有求隐藏关卡的:(。由于工作太忙，私信和评论后面都没怎么回复，这里一并做下总结回复
+# 前言
+
+半年前在知乎浏览到一个帖子，是关于如何面试iOS工程师。由于当时公司正在招聘iOS工程师，自己也面试了不少同学，就饶有兴致的把自己的面试问题清单贴了出去，却意外的引来了不少关注。还有不少同学认真回答并将答案私信于我交流的，还有求隐藏关卡的。由于工作太忙，私信和评论后面都没怎么回复，这里一并做下总结回复。（来源于知乎）
 
 #一份面试题的意义
 
@@ -8,6 +10,7 @@
 有一定的工作经历的同学，想测试下自己的iOS水平，看自己能卖多少钱。
 本身iOS基础不错，抱着技多不压身心态补充知识的。
 土豪老板就差一个程序员了，想找份带标准答案的面试题找真爱。
+
 除了第三类同学心态正确外，其他的都高估面试题的作用了。面试题只是武功招式，知识体系才是内功心法。刚入门记住的都是招式，但招式何其多，面试的时候总会有遗漏和盲区，内功心法才是一通万通，能以不变应万变。这份面试题你答不全不能说明你iOS不及格，你全答对了你也不能上天。真正应该关注的是这份题背后所包含的理论知识体系。帖子里还有其他不少优质回答，涵盖候选人心态，习惯，基础知识，产品理解等各个方面，都值得一读。当然啦，既然出了题，就得有答案，就有它的目标群体。主要考察对象是从事iOS开发 1～3年的同学。不需要全部答对，能对一半以上问题侃侃而谈就不错了。
 
 
@@ -35,7 +38,7 @@
 
 现在有不少程序员是直接从arc上手的，从没接触过mrc，对arc的理解仅仅停留在apple帮助管理内存的层面。这个问题真正想了解的是对内存管理的理解，retain release虽然不用写了，但arc下还是会有内存泄漏野指针crash的bug存在。如果能从retain count这种内存管理策略的角度去阐述arc诞生的意义就算答对了。如果还能扯下其他类型的策略，比如java里的mark and sweep，那就加分点赞。
 
-###请解释以下keywords的区别： assign vs weak, __block vs __weak
+###请解释以下keywords的区别： assign vs weak, \_\_block vs \_\_weak
 
 这道题属于基础语法题，可以网上搜到答案。不过真有不少同学不知道weak在对象释放后会置为nil。__block关键字的理解稍微难点，因为在arc和mrc下含义（对retain count的影响）完全不同。理解了这几个关键字就能应付使用block时引入retain cycle的风险了。这题还在内存管理的范畴之内。
 
@@ -47,32 +50,50 @@
 
 说没遇到过的我很难相信你有过成熟项目的经历。这题答不出了会扣很多很多分。用过block，写过delegate的肯定都踩过坑。
 
-###+(void)load; +(void)initialize；有什么用处？
+###+load和+initialize有什么用处？
 
 这题属于runtime范畴，我遇到过能说出对runtime的理解却不知道这两个方法的候选人。所以答不出来也没关系，这属于细节知识点，是加分项，能答出两个message各在什么阶段接收就可以了。
+
+* +load是在类载入时就会调用。通常我们在Method-Swizzling时，会选择在+load方法中处理。因为只要类存在，就会载入，而只要载入就会调用。
+* +initialize是在类首次被调用时才会调用，所以即使类存在并不一定会调用
 
 ###为什么其他语言里叫函数调用， objective c里则是给对象发消息（或者谈下对runtime的理解）
 
 这题考查的是objective c这门语言的dynamic特性，需要对比c++这类传统静态方法调用才能理解。最好能说出一个对象收到message之后的完整的流程是如何的。对runtime有完整理解的候选人还能说出oc的对象模型。
 
+* 首先，函数调用通常是在面向过程的语言中叫法。
+* 其次，ObjC是扩展C，因此具备C的特性，也就有函数调用
+* 最后，ObjC中有面向对象特性，在编译时会将方法调用转成成objc_msgSend，其实就是给消息接收者发送消息。
+
 ###什么是method swizzling?
 
 说了解runtime但没听过method swizzling是骗人的。这题很容易搜到答案。定位一些疑难杂症bug，hack老项目实现，阅读第三方源码都有机会接触到这个概念。
 
+Method-Swizzling其实就是方法实现体交换。在ObjC中，方法名与实现体是一一对应的关系，只要知道方法名，就能找到实现体。
+
+笔者专门学习研究了一下runtime的Method-Swizzling，大家可以参考阅读[Runtime Method Swizzling](http://101.200.209.244/runtime-method-swizzling/)
+
 ###UIView和CALayer是啥关系?
 
-能答出UIView是CALayer的delegate就及格了，能说出UIView主要处理事件，CALayer负责绘制就更好，再聊下二者在使用过程中对动画流畅性影响的注意点就superb。UI流畅性是个大话题，推荐看下这两篇文章。中餐，西餐。
+能答出UIView是CALayer的delegate就及格了，能说出UIView主要处理事件，CALayer负责绘制就更好，再聊下二者在使用过程中对动画流畅性影响的注意点就更好了，UI流畅性是个大话题。
 
-###如何高性能的给UIImageView加个圆角？（不准说layer.cornerRadius!）
+一个UIView默认会有一个layer，当然一个UIView可以有很多个layer。UIView负责处理事件，而CALayer负责绘制，而绘制渲染又分为离屏渲染和当前屏渲染。我们知道，离屏渲染是要付出很大的代价的，因此在性能方面是需要好好考虑的。大家可以阅读笔者写的[Offscreen-Rendered（离屏渲染）](http://101.200.209.244/offscreen-rendered/)
+
+###如何高性能的给UIImageView加个圆角？
 
 这题讨论的最多，还有说美工切图就搞定的。答主在项目里做过圆角头像的处理，里面的坑还真不少。cornerRadius会导致offscreen drawing有性能问题，美工切图无法适用有背景图的场景，即使加上shouldRasterize也有cache实效问题。正确的做法是切换到工作线程利用CoreGraphic API生成一个offscreen UIImage，再切换到main thread赋值给UIImageView。这里还涉及到UIImageView复用，圆角头像cache缓存（不能每次都去绘制），新旧头像替换等等逻辑。还有其他的实现方式，但思路离不开工作线程与主线程切换。
 
+笔者开源了一个专门处理圆角问题的库：[开源高性能处理圆角](http://101.200.209.244/hybimagecliped-image-cornerradius/)
+
 ###使用drawRect有什么影响？（这个可深可浅，你至少得用过。。）
 
-不少同学都用过drawRect或者看别人用过，但不知道这个api存在的含义。这不仅仅是另一种做UI的方式。drawRect会利用CPU生成offscreen bitmap，从而减轻GPU的绘制压力，用这种方式最UI可以将动画流畅性优化到极致，但缺点是绘制api复杂，offscreen cache增加内存开销。UI动画流畅性的优化主要平衡CPU和GPU的工作压力。推荐一篇文章：西餐
+不少同学都用过drawRect或者看别人用过，但不知道这个api存在的含义。这不仅仅是另一种做UI的方式。drawRect会利用CPU生成offscreen bitmap，从而减轻GPU的绘制压力，用这种方式绘制UI可以将动画流畅性优化到极致，但缺点是绘制api复杂，offscreen cache增加内存开销。UI动画流畅性的优化主要平衡CPU和GPU的工作压力。
 
-ASIHttpRequest或者SDWebImage里面给UIImageView加载图片的逻辑是什么样的？（把UIImageView放到UITableViewCell里面问更赞） 
+###ASIHttpRequest或者SDWebImage里面给UIImageView加载图片的逻辑是什么样的？
+
 很多同学没有读源码的习惯，别人的轮子拿来只是用用却不知道真正的营养都在源代码里面。这两个经典的framework代码并不复杂，很值得一读。能对一个UIImageView怎么通过url展示一张图片有完整的理解。涉及到的知识点也非常多，UITableViewCell的复用，memory cache, disk cache, 多线程切换，甚至http协议本身都需要有一定的涉及。
+
+把UIImageView放到UITableViewCell里面问更赞。
 
 ###麻烦你设计个简单的图片内存缓存器（移除策略是一定要说的）
 
@@ -104,37 +125,5 @@ controller layout触发的时候，开发者有机会去重新layout自己的各
 
 两个差不多，随便用一个。
 post比get安全（其实两个都不安全）
-能说下两个http格式有什么不同，各自应用的场景就合格了。更多可以阅读下这个答案。
+能说下两个http格式有什么不同，各自应用的场景就合格了。
 
-我知道你大学毕业过后就没接触过算法数据结构了，但是请你一定告诉我什么是Binary search tree? search的时间复杂度是多少？我很想知道！
-很多人都很排斥数据结构和算法题，我个人意见是复杂的可以不知道，基础的一定要了解。时间复杂度是什么得知道，list，queue，stack，table，tree这些都要明白是啥。连hash表的概念都不知道怎么能保证在写代码的时候注意性能呢。
-
-
-#隐藏关卡😓
-
-其实当初写这份答案的时候并没有准备什么隐藏关卡，只不过有一些从自己这些年项目经历里总结出来的有深度的知识点，感觉可以难倒不少同学:p。求隐藏关卡的同学真不少，近期我会再准备一份进阶版面试题，权当作隐藏关卡。面向的对象是3～5年iOS开发经验的同学。再次申明下：这只是一份面试题。
-
-#关注我
-
-
-**Swift/ObjC技术群一：[324400294(已满)]()**
-
-**Swift/ObjC技术群二：[494669518]()**
-
-**ObjC/Swift高级群：[461252383（注明年限，新手勿扰）]()**
-
-关注微信公众号：[**iOSDevShares**]()
-
-关注新浪微博账号：[标哥Jacky](http://weibo.com/u/5384637337)
-
-标哥的GITHUB地址：[CoderJackyHuang](https://github.com/CoderJackyHuang)
-
-
-#支持并捐助
-
-
-如果您觉得文章对您很有帮忙，希望得到您的支持。您的捐肋将会给予我最大的鼓励，感谢您的支持！
-
-支付宝捐助      | 微信捐助
-------------- | -------------
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/alipay-e1451124478416.jpg) | ![image](http://www.henishuo.com/wp-content/uploads/2015/12/weixin.jpg)

@@ -128,7 +128,7 @@ NSDictionary *attributes = @{NSFontAttributeName : [UIFont systemFontOfSize:1]};
   if (previousViewControllerIndex >= 0) {
     previous = [viewControllerArray objectAtIndex:previousViewControllerIndex];
     previous.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc]
-                                                 initWithTitle:@""
+                                                 initWithTitle:@" "
                                                  style:UIBarButtonItemStylePlain
                                                  target:self
                                                  action:nil];
@@ -137,6 +137,8 @@ NSDictionary *attributes = @{NSFontAttributeName : [UIFont systemFontOfSize:1]};
 ```
 
 这个方法是我们用于判断是否有上一个界面，如果有，则将上一个界面的返回按钮的标题设置为空，那么在本界面的返回按钮就不会有标题，如此一来，就解决了上个界面的标题过长，而本界面标题也很长时，导致本界面的标题不居中显示的问题。
+
+**Tip：**修改空串为空格串，偶尔遇到过不居中，但是改成空格串就可以解决！
 
 #建议
 

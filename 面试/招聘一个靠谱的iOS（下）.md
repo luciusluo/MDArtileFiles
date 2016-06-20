@@ -24,7 +24,7 @@ int main(int argc, char * argv[]) {
 
 重点是UIApplicationMain()函数，这个方法会为main thread设置一个NSRunLoop对象，这就解释了：为什么我们的应用可以在无人操作的时候休息，需要让它干活的时候又能立马响应。
 
-* 对非主线程来说，run loop默认是没有启动的。如果你需要更多的线程交互则可以手动配置和启动，如果线程只是去执行一个长时间的已确定的任务则不需要。
+* 对非主线程来说，run loop默认是没有启动的，确切地说，当没有访问过非主线程的run loop时，run loop是不存在的，因为这是一种懒加载。如果你需要做更多的线程交互则可以手动配置和启动，如果线程只是去执行一个长时间的已确定的任务则不需要。
 
 * 在任何一个Cocoa程序的线程中，都可以通过以下代码来获取到当前线程的run loop：
 
@@ -35,11 +35,11 @@ NSRunLoop *runloop = [NSRunLoop currentRunLoop];
 如果想更深入地了解RunLoop，请参考[iOS之Run Loop详解](http://www.henishuo.com/ios-runloop-in-detail/)
 
 
-#2、runloop的mode作用是什么？
+#2、RunLoop的mode作用是什么？
 
 **参考答案：**
 
-mode主要是用来指定事件在运行循环中的优先级的，分为：
+mode主要是用来指定事件在运行循环中什么状态接收事件，也就是通过mode可以过滤不需要的状态所传过来的事件，分为：
 
 * NSDefaultRunLoopMode（kCFRunLoopDefaultMode）：默认，空闲状态
 * UITrackingRunLoopMode：ScrollView滑动时会切换到该Mode
@@ -51,7 +51,7 @@ mode主要是用来指定事件在运行循环中的优先级的，分为：
 * NSDefaultRunLoopMode（kCFRunLoopDefaultMode）
 * NSRunLoopCommonModes（kCFRunLoopCommonModes）
 
-如果我们把一个NSTimer对象以NSDefaultRunLoopMode（kCFRunLoopDefaultMode）添加到主运行循环中的时候, ScrollView滚动过程中会因为mode的切换，而导致NSTimer将不再被调度。当我们滚动的时候，也希望不调度，那就应该使用默认模式。但是，如果希望在滚动时，定时器也要回调，那就应该使用common mode。
+如果我们把一个NSTimer对象以NSDefaultRunLoopMode（kCFRunLoopDefaultMode）添加到主运行循环中的时候, ScrollView滚动过程中会因为mode的切换，而导致NSTimer将不会被调度。当我们滚动的时候，若希望不调度，那就应该使用默认模式。但是，如果希望在滚动时，定时器也要回调，那就应该使用common modes。
 
 如果想更深入地了解RunLoop，请参考[iOS之Run Loop详解](http://www.henishuo.com/ios-runloop-in-detail/)
 
@@ -59,11 +59,11 @@ mode主要是用来指定事件在运行循环中的优先级的，分为：
 
 **参考答案：**
 
-RunLoop只能同时运行在一种mode下。因此，如果要换mode，那么当前的loop也需要暂停，并重启成新的mode。利用这个机制，ScrollView滚动过程中NSDefaultRunLoopMode（kCFRunLoopDefaultMode）的mode会切换到UITrackingRunLoopMode来保证ScrollView的流畅滑动，只能在NSDefaultRunLoopMode模式下处理的事件会影响scrllView的滑动。
+RunLoop只能同时运行在一种mode下。因此，如果要换mode，那么当前的loop也需要暂停，并重启成新的mode。利用这个机制，ScrollView滚动过程中NSDefaultRunLoopMode（kCFRunLoopDefaultMode）的mode会切换到UITrackingRunLoopMode来保证ScrollView的流畅滑动，只能在NSDefaultRunLoopMode模式下处理的事件会影响scrllView的滑动。此时，需要希望列表滚动时也能回调timer，那就需要将mode设置为NSRunLoopCommonModes。
 
-**原因：**如果我们把一个NSTimer对象以NSDefaultRunLoopMode（kCFRunLoopDefaultMode）添加到主运行循环中的时候, ScrollView滚动过程中会因为mode的切换，而导致NSTimer将不再被调度。
+**原因：**如果我们把一个NSTimer对象以NSDefaultRunLoopMode（kCFRunLoopDefaultMode）添加到运行循环中的时候, ScrollView滚动过程中会因为mode的切换，而导致NSTimer将不被调度。
 
-同时因为mode还是可定制的，所以Timer计时会被scrollView的滑动影响的问题可以通过将timer添加到NSRunLoopCommonModes（kCFRunLoopCommonModes）来解决。代码如下：
+同时因为mode还是可定制的，所以Timer回调受scrollView的滑动影响的问题可以通过将timer添加到NSRunLoopCommonModes（kCFRunLoopCommonModes）来解决。代码如下：
 
 ```
 // 将timer添加到NSDefaultRunLoopMode中
@@ -89,11 +89,11 @@ NSTimer *timer = [NSTimer timerWithTimeInterval:1.0
 
 如果想更深入地了解RunLoop，请参考[iOS之Run Loop详解](http://www.henishuo.com/ios-runloop-in-detail/)
 
-#4、objc使用什么机制管理对象内存？
+#4、ObjC使用什么机制管理对象内存？
 
 **参考答案：**
 
-通过引用计数器(retainCount)的机制来决定对象是否需要释放。 每次runloop完成一个循环的时候，都会检查对象的 retainCount，如果retainCount为0，说明该对象没有地方需要继续使用了，可以释放掉了。
+通过引用计数器(retainCount)的机制来决定对象是否需要释放。 每次runloop完成一个事件循环的时候，都会检查对象的retainCount是否为0，如果retainCount为0，说明该对象没有地方需要继续使用了，可以释放掉了，此时才会真正的dealloc。
 
 #5、ARC通过什么方式帮助开发者管理内存？
 
@@ -110,6 +110,8 @@ ARC相对于MRC，不是在编译时添加retain/release/autorelease这么简单
 
 这种问题是经常遇到的，在开发时经常会出现BAD_ACCESS。原因是访问了野指针，比如访问已经释放对象的成员变量或者发消息、死循环等。
 
+举个例子，播放视频时，设置了代理，当快速进入播放再快速返回时，就有可能出现这种bug。
+
 #7、苹果是如何实现autoreleasepool的？
 
 **参考答案：**
@@ -125,13 +127,13 @@ autoreleasepool以一个队列数组的形式实现,主要通过下列三个函�
 
 举例说明：我们都知道用类方法创建的对象都是 Autorelease 的，那么一旦 Person 出了作用域，当在 Person 的 dealloc 方法中打上断点，我们就可以看到这样的调用堆栈信息：
 
-![image](http://www.henishuo.com/wp-content/uploads/2016/02/687474703a2f2f6936302e74696e797069632e636f6d2f31356d666a31312e6a7067.png)
+![image](http://101.200.209.244/wp-content/uploads/2016/02/687474703a2f2f6936302e74696e797069632e636f6d2f31356d666a31312e6a7067.png)
 
 #8、使用block时什么情况会发生引用循环，如何解决？
 
 **参考答案：**
 
-一个对象中强引用了block，在block中又使用了该对象，就会发生循环引用。 解决方法是将该对象使用\__weak或者\__block修饰符修饰之后再在block中使用。
+一个对象中强引用了block，在block中又使用了该对象，就会发生循环引用。 解决方法是将该对象使用\_\_weak或者\_\_block修饰符修饰之后再在block中使用。
 
 ```
 __weak __typeof(self) weakSelf = self；
@@ -189,7 +191,7 @@ foo();
 ```
 __weak __typeof(self) weakSelf = self;
 dispatch_group_async(_operationsGroup, _operationsQueue, ^{
-	__typeof__(self) strongSelf = weakSelf;
+	__typeof __(self) strongSelf = weakSelf;
 	[strongSelf doSomething];
 	[strongSelf doSomethingElse];
 });
@@ -209,7 +211,7 @@ _observer = [[NSNotificationCenter defaultCenter] addObserverForName:@"testKey"
 ```
 self --> _observer --> block --> self 显然这也是一个循环引用。
 
-#11、GCD的队列（dispatch\_queue\_t）有哪此类型？
+#11、GCD的队列（dispatch\_queue\_t）有哪些类型？
 
 **参考答案：**
 
@@ -217,6 +219,8 @@ self --> _observer --> block --> self 显然这也是一个循环引用。
 
 * 串行队列Serial Dispatch Queue
 * 并行队列Concurrent Dispatch Queue
+
+我们所熟知的主线程队列dispath\_get\_main\_queue就属于串行队列，而全局队列dispatch\_get\_global\_queue属于并行队列。
 
 #12、如何用GCD同步若干个异步调用？
 
@@ -276,7 +280,7 @@ dispatch\_get\_current\_queue容易造成死锁。详情点击该API查看官方
 
 只输出：1，然后主线程锁死。也就是所谓的界面卡死，点击都没有反映，但是又不会闪退。在使用dispatch_sync时一定要小心再小心。
 
-#16、若一个类有实例变量NSString *\_foo，调用setValue:forKey:时，可以以foo还是\_foo作为key？
+#16、若一个类有实例变量NSString *\_foo，调用setValue:forKey:时，是以foo还是\_foo作为key？
 
 **参考答案：**
 
@@ -302,6 +306,8 @@ dispatch\_get\_current\_queue容易造成死锁。详情点击该API查看官方
 * n 断点指针下一步，猜测是next的缩写
 * po打印对象，笔者猜测po是print object的缩写
 * p与po类似，只是打印出来的是地址
+* bt 打印堆栈信息
+* expr 执行某行代码，比如@import UIKit
 
 #19、Apple用什么方式实现对一个对象的KVO？
 
@@ -311,9 +317,9 @@ Apple 的文档对 KVO 实现的描述：
 
 从Apple 的文档可以看出：Apple 并不希望过多暴露 KVO 的实现细节。不过，要是借助 runtime 提供的方法去深入挖掘，所有被掩盖的细节都会原形毕露：
 
-当你观察一个对象时，一个新的类会被动态创建。这个类继承自该对象的原本的类，并重写了被观察属性的 setter 方法。重写的 setter 方法会负责在调用原 setter 方法之前和之后，通知所有观察对象：值的更改。最后通过 isa 混写（isa-swizzling） 把这个对象的 isa 指针 ( isa 指针告诉 Runtime 系统这个对象的类是什么 ) 指向这个新创建的子类，对象就神奇的变成了新创建的子类的实例。我画了一张示意图，如下所示：
+当你观察一个对象时，一个新的类会被动态创建。这个类继承自该对象的原本的类，并重写了被观察属性的 setter 方法。重写的 setter 方法会负责在调用原 setter 方法之前和之后，通知所有观察对象：值的更改。最后通过 isa 混写（isa-swizzling） 把这个对象的 isa 指针 ( isa 指针告诉 Runtime 系统这个对象的类是什么 ) 指向这个新创建的子类，对象就神奇的变成了新创建的子类的实例。借来的一张示意图，如下所示：
 
-![image](http://www.henishuo.com/wp-content/uploads/2016/02/687474703a2f2f6936322e74696e797069632e636f6d2f7379353775722e6a7067.png)
+![image](http://101.200.209.244/wp-content/uploads/2016/02/687474703a2f2f6936322e74696e797069632e636f6d2f7379353775722e6a7067.png)
 
 KVO 确实有点黑魔法：
 
@@ -351,17 +357,4 @@ KVO 在实现中通过 isa 混写（isa-swizzling） 把这个对象的 isa 指�
 然而 KVO 在实现中使用了 isa 混写（ isa-swizzling） ，这个的确不是很容易发现：Apple 还重写、覆盖了 -class 方法并返回原来的类。 企图欺骗我们：这个类没有变，就是原本那个类。。。
 
 但是，假设“被监听的对象”的类对象是 MYClass ，有时候我们能看到对 NSKVONotifying_MYClass 的引用而不是对 MYClass 的引用。借此我们得以知道 Apple 使用了 isa 混写（isa-swizzling）。具体探究过程可参考[这篇博文](https://www.mikeash.com/pyblog/friday-qa-2009-01-23.html)。
-
-#关注我
-
-
-关注                | 账号              | 备注
--------------      | -------------     | ----------------
-Swift/ObjC技术群一  | 324400294         |  群一若已满，请申请群二
-Swift/ObjC技术群二  | 494669518         | 群二若已满，请申请群三
-Swift/ObjC技术群三  | 461252383         | 群三若已满，会有提示信息
-关注微信公众号       | iOSDevShares      | 关注微信公众号，会定期地推送好文章
-关注新浪微博账号      |  [标哥Jacky](http://weibo.com/u/5384637337) | 关注微博，每次发布文章都会分享到新浪微博
-关注标哥的GitHub     | [CoderJackyHuang](https://github.com/CoderJackyHuang) | 这里有很多的Demo和开源组件
-关于我               | [进一步了解标哥](http://www.henishuo.com/about-biaoge/) | 如果觉得文章对您很有帮助，可捐助我！
 

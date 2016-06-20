@@ -13,7 +13,7 @@
 
 **相比assign不同之处：**
 
-* weak关键字只能用于对象，对于基本类型不能使用
+* weak关键字只能用于对象，对于基本类型不能使用。当对象被释放后，自动被设置为nil，防止野指针产生
 * assign既可以用于对象，也可以用于基本类型，但是只是简单地进行赋值操作而已
 
 #2、怎么用copy关键字？
@@ -26,7 +26,7 @@ copy关键字只能应用于对象，不能用于基本类型。copy属性会复
 
 * copy关键字只能应用于对象，不能用于基本类型
 * 对于字符串，理应始终使用copy，虽然使用strong一般情况下也没有关系
-* 对于不可变集合类型，有可变和不可变类型，若要防止外部的修改影响所传过来的值，应该使用copy来声明，虽然大多情况下使用strong一定问题都没有。不过，实际开发中，我见到的几乎都是使用strong来声明的，包括笔者在内。
+* 对于不可变集合类型，有可变和不可变类型，若要防止外部的修改影响所传过来的值，应该使用copy来声明，虽然大多情况下使用strong一点问题都没有。不过，实际开发中，我见到的几乎都是使用strong来声明的，包括笔者的代码在内。
 * 对于可变集合类型，都应该使用strong来声明，不能使用copy，因为copy会生成一个不可变的类型，而不是可变的。
 * 对于block，都应该使用copy来声明，原因是block来捕获上下文的信息。具体请参考：[【官方文档】Objects Use Properties to Keep Track of Blocks](https://developer.apple.com/library/ios/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/WorkingwithBlocks/WorkingwithBlocks.html#//apple_ref/doc/uid/TP40011210-CH8-SW12)
 
@@ -67,11 +67,11 @@ self.mutableArray = array;
 
 现在编译器已经默认为我们添加@synthesize propertyName = _propertyName;因此不再需要手动添加了，除非你真的要改成员变量名。
 
-生成getter方法时，会判断当前属性名是否有\_，比如声明属性为@property (nonatomic, copy) NSString *\_name;那么所生成的成员变量名就会变成\__name，如果我们要手动生成getter方法，就要判断是否以\_开头了。
+生成getter方法时，会判断当前属性名是否有\_，比如声明属性为@property (nonatomic, copy) NSString *\_name;那么所生成的成员变量名就会变成\_\_name，如果我们要手动生成getter方法，就要判断是否以\_开头了。
 
 不过，命名都要有规范，是不允许声明属性是使用\_开头的，不规范的命名，在使用runtime时，会带来很多的不方便的。
 
-如果想了解更多关于runtime方面的知识，请阅读[runtime专题](http://www.henishuo.com/category/runtime/)
+如果想了解更多关于runtime方面的知识，请阅读[runtime专题](http://101.200.209.244/category/runtime/)
 
 #5、@protocol和category中如何使用 @property
 
@@ -111,7 +111,7 @@ objc_getAssociatedObject
 }
 ```
 
-* 通过objc_storeWeak函数来实现，不过这种方式几乎没有遇到有人这么使用过，因为这里不细说了。
+* 通过objc\_storeWeak函数来实现，不过这种方式几乎没有遇到有人这么使用过，因为这里不细说了。
 
 #7、@property中有哪些属性关键字，后面可以有哪些修饰符？
 
@@ -158,13 +158,13 @@ objc_getAssociatedObject
 * [Objective-C ARC: strong vs retain and weak vs assign](http://stackoverflow.com/a/15541801/3395008)
 * [Variable property attributes or Modifiers in iOS](http://rdcworld-iphone.blogspot.in/2012/12/variable-property-attributes-or.html)
 
-#11、objc中向一个nil对象发送消息将会发生什么？
+#11、ObjC中向一个nil对象发送消息将会发生什么？
 
 **参考答案：**
 
-在Objective-C中向nil发送消息是完全有效的，只是在运行时不会有任何作用，因为在运行时调用时，objc_msgSend函数传过去的receiver是nil，而内部会判断receiver是否为nil，若为nil则什么也不干。同样，若cmd也就是selector为nil，也是什么也不干。
+在Objective-C中向nil发送消息是完全有效的，只是在运行时不会有任何作用，因为在运行时调用时，objc\_msgSend函数传过去的receiver是nil，而内部会判断receiver是否为nil，若为nil则什么也不干。同样，若cmd也就是selector为nil，也是什么也不干。
 
-#12、objc中向一个对象发送消息[obj foo]和objc_msgSend()函数之间有什么关系？
+#12、ObjC中向一个对象发送消息[obj foo]和objc_msgSend()函数之间有什么关系？
 
 **参考答案：**
 
@@ -182,13 +182,13 @@ objc_getAssociatedObject
 
 下面只讲述对象方法的解析过程：
 
-* 第一步：+ (BOOL)resolveInstanceMethod:(SEL)sel实现方法，指定是否动态添加方法。若返回NO，则进入下一步，若返回YES，则通过class_addMethod函数动态地添加方法，消息得到处理，此流程完毕。
+* 第一步：+ (BOOL)resolveInstanceMethod:(SEL)sel实现方法，指定是否动态添加方法。若返回NO，则进入下一步，若返回YES，则可以通过class_addMethod函数动态地添加方法，消息得到处理，此流程完毕。
 * 第二步：在第一步返回的是NO时，就会进入- (id)forwardingTargetForSelector:(SEL)aSelector方法，这是运行时给我们的第二次机会，用于指定哪个对象响应这个selector。不能指定为self。若返回nil，表示没有响应者，则会进入第三步。若返回某个对象，则会调用该对象的方法。
 * 第三步：若第二步返回的是nil，则我们首先要通过- (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector指定方法签名，若返回nil，则表示不处理。若返回方法签名，则会进入下一步。
 * 第四步：当第三步返回方法方法签名后，就会调用- (void)forwardInvocation:(NSInvocation *)anInvocation方法，我们可以通过anInvocation对象做很多处理，比如修改实现方法，修改响应对象等
 * 第五步：若没有实现- (void)forwardInvocation:(NSInvocation *)anInvocation方法，那么会进入- (void)doesNotRecognizeSelector:(SEL)aSelector方法。若我们没有实现这个方法，那么就会crash，然后提示打不到响应的方法。到此，动态解析的流程就结束了。
 
-更新详细地，请阅读[runtime message forwarding](http://www.henishuo.com/runtime-message-forwarding/)
+更新详细地，请阅读[runtime message forwarding](http://101.200.209.244/runtime-message-forwarding/)
 
 #14、一个objc对象的isa的指针指向什么？有什么作用？
 
@@ -196,9 +196,9 @@ objc_getAssociatedObject
 
 先阅读下图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/inherit.png)
+![image](http://101.200.209.244/wp-content/uploads/2015/12/inherit.png)
 
-从图中可以清晰地看出，一个对象的isa指针指向的是他所属的类(class)，用于查找对象上的方法。而类对象的isa指针又指向它的元类(meta class)，无类的isa也指向根类的元类，而根类的元类的isa又指向根类本身。
+从图中可以清晰地看出，一个对象的isa指针指向的是他所属的类(class)，用于查找对象上的方法。而类的isa指针又指向它的元类(meta class)，元类的isa也指向根类的元类，而根类的元类的isa又指向根类的元类本身。
 
 #15、下面的代码输出什么？
 
@@ -254,18 +254,19 @@ struct objc_super {
 
 如下图所示，每个selector都与对应的IMP是一一对应的关系，通过selector就可以直接找到对应的IMP：
 
-![image](http://www.henishuo.com/wp-content/uploads/2016/01/153752_G4aM_1463495.jpg)
+![image](http://101.200.209.244/wp-content/uploads/2016/01/153752_G4aM_1463495.jpg)
 
 #17、objc中的类方法和实例方法有什么本质区别和联系？
 
 **类方法：**
 
-* 类方法是属于类对象的（所谓的类对象，不是class instance）
+* 类方法是属于类的，也就是所有拥有相同特性的实例共同拥有的
 * 类方法只能通过类对象调用
-* 类方法中的self是类对象
+* 类方法中的self是类本身，而不是实例本身
 * 类方法可以调用其他的类方法
 * 类方法中不能访问成员变量
 * 类方法中不定直接调用对象方法
+* 类方法存储在元类方法列表中
 
 **实例方法：**
 
@@ -286,7 +287,7 @@ struct objc_super {
 IMP msgForward =  _objc_msgForward;
 ```
 
-如果手动调用_objc_msgForward，将跳过查找IMP的过程，而是直接触发“消息转发”，进入如下流程：
+如果手动调用\_objc\_msgForward，将跳过查找IMP的过程，而是直接触发“消息转发”，进入如下流程：
 
 * 第一步：+ (BOOL)resolveInstanceMethod:(SEL)sel实现方法，指定是否动态添加方法。若返回NO，则进入下一步，若返回YES，则通过class_addMethod函数动态地添加方法，消息得到处理，此流程完毕。
 * 第二步：在第一步返回的是NO时，就会进入- (id)forwardingTargetForSelector:(SEL)aSelector方法，这是运行时给我们的第二次机会，用于指定哪个对象响应这个selector。不能指定为self。若返回nil，表示没有响应者，则会进入第三步。若返回某个对象，则会调用该对象的方法。
@@ -294,7 +295,7 @@ IMP msgForward =  _objc_msgForward;
 * 第四步：当第三步返回方法方法签名后，就会调用- (void)forwardInvocation:(NSInvocation *)anInvocation方法，我们可以通过anInvocation对象做很多处理，比如修改实现方法，修改响应对象等
 * 第五步：若没有实现- (void)forwardInvocation:(NSInvocation *)anInvocation方法，那么会进入- (void)doesNotRecognizeSelector:(SEL)aSelector方法。若我们没有实现这个方法，那么就会crash，然后提示打不到响应的方法。到此，动态解析的流程就结束了。
 
-更新详细地，请阅读[runtime message forwarding](http://www.henishuo.com/runtime-message-forwarding/)
+更新详细地，请阅读[runtime message forwarding](http://101.200.209.244/runtime-message-forwarding/)
 
 #19、runtime如何实现weak变量的自动置nil？
 
@@ -314,15 +315,3 @@ weak修饰的指针默认值是nil（在Objective-C中向nil发送消息是安�
 
 运行时创建的类是可以添加实例变量，调用class_addIvar函数。但是得在调用 objc\_allocateClassPair之后，objc\_registerClassPair之前，原因同上。
 
-#关注我
-
-
-关注                | 账号              | 备注
--------------      | -------------     | ----------------
-Swift/ObjC技术群一  | 324400294         |  群一若已满，请申请群二
-Swift/ObjC技术群二  | 494669518         | 群二若已满，请申请群三
-Swift/ObjC技术群三  | 461252383         | 群三若已满，会有提示信息
-关注微信公众号       | iOSDevShares      | 关注微信公众号，会定期地推送好文章
-关注新浪微博账号      |  [标哥Jacky](http://weibo.com/u/5384637337) | 关注微博，每次发布文章都会分享到新浪微博，即可时时阅读文章
-关注标哥的GitHub     | [CoderJackyHuang](https://github.com/CoderJackyHuang) | 这里有很多的Demo和开源组件，大家可以关注哦！
-关于我               | [进一步了解标哥](http://www.henishuo.com/about-biaoge/) | 大家若对笔者感兴趣，可以关注我哦！如果觉得文章对您很有帮助，可捐助我！

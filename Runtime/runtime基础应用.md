@@ -5,14 +5,13 @@
 
 回想自己，曾经在面试中被面试官拿运行时刁难过，也在笔试中遇到过。因此，后来就深入地学习了`Runtime`机制，学习里面的API。所以才有了后来的组件封装中使用运行时。
 
-相信我们都遇到过这样一个问题：我想在扩展（category）中添加一个属性，如果iOS是不允许给扩展类扩展属性的，那怎么办呢？答案就是**使用运行时机制**
+相信我们都遇到过这样一个问题：我想通过分类（category）追加一个属性，而iOS是不允许给已有类通过分类的方式追加属性的，那怎么办呢？答案就是**使用运行时机制**
 
 #运行时机制
 
-`Runtime`是一套比较底层的纯C语言的API, 属于C语言库, 包含了很多底层的C语言API。 
-在我们平时编写的iOS代码中, 最终都是转成了runtime的C语言代码。
+`Runtime`是一套比较底层的纯C语言的API, 属于C语言库, 包含了很多底层的C语言API。 在我们平时编写的iOS代码中, 最终都是转成了runtime的C代码。
 
-所谓运行时，也就是在编译时是不存在的，只是在运行过程中才去确定对象的类型、方法等。利用`Runtime`机制可以在程序运行时动态修改类、对象中的所有属性、方法等。
+所谓运行时，也就是在编译时是不确定的，只是在运行过程中才去确定对象的类型、方法等。利用`Runtime`机制可以在程序运行时动态修改类、对象中的所有属性、方法等。
 
 还记得我们在网络请求数据处理时，调用了`-setValuesForKeysWithDictionary:`方法来设置模型的值。这里什么原理呢？为什么能这么做？其实就是通过`Runtime`机制来完成的，内部会遍历模型类的所有属性名，然后设置与`key`对应的属性名的值。
 
@@ -33,7 +32,7 @@
   NSString *_variableString;
 }
 
-// 默认会是什么呢？
+// 默认会是什么类型呢？
 @property (nonatomic, copy) NSString *name;
 
 // 默认是strong类型
@@ -185,7 +184,9 @@ p.allProperties()
   return resultDict;
 }
 ```
+
 测试一下：
+
 ```
 // 此方法返回的只有属性值不为空的属性
 NSDictionary *dict = p.allPropertyNamesAndValues;
@@ -237,6 +238,7 @@ for (propertyName, propertyValue) in dict.enumerate() {
   print("propertyName: \(propertyName), propertyValue: \(propertyValue)")
 }
 ```
+
 打印结果与上面的一样，由于`array`属性的值为nil，因此不会处理。
 
 ```
@@ -419,17 +421,15 @@ objc_msgSend(p, @selector(allMethods));
 ```
 这样就相当于手动调用`[p allMethods];`。但是编译器会抱错，问题提示期望的参数为0，但是实际上有两个参数。解决办法是，关闭严格检查：
 
-![image](https://mmbiz.qlogo.cn/mmbiz/sia5QxFVcFD2JLSfAicem2zkAHcrKXEbawib3bNlicY6DkibaItQCK8VyKGowW3u8lNTibGxdQ6pA1dMFSYoiacyu7ib7A/0?wx_fmt=png)
+![image](http://www.henishuo.com/wp-content/uploads/2016/06/0.jpeg)
 
 ##Swift版
 
 很抱歉，似乎在Swift中已经没有这种写法了。如果有，请告诉我。
 
-#Category扩展"属性"
+#Category追加"属性"
 
-
-
-iOS的category是不能扩展存储属性的，但是我们可以通过运行时关联来扩展“属性”。
+iOS的category是不能追加存储属性的，但是我们可以通过运行时关联来追加“属性”。
 
 ##Objective-C版
 
@@ -463,7 +463,6 @@ const void *s_HYBCallbackKey = "s_HYBCallbackKey";
 Swift版的要想扩展闭包，就比OC版的要复杂得多了。这里只是例子，写了一个简单的存储属性扩展。
 
 ```
-
 let s_HYBFullnameKey = "s_HYBFullnameKey"
 
 extension Person {
@@ -479,7 +478,7 @@ extension Person {
 #总结
 
 
-在开发中，我们比较常用的是使用关联属性的方式来扩展我们的“属性”，以便在开发中简单代码。我们在开发中使用关联属性扩展所有响应事件、将代理转换成block版等。比如，我们可以将所有继承于UIControl的控件，都拥有block版的点击响应，那么我们就可以给UIControl扩展一个TouchUp、TouchDown、TouchOut的block等。
+在开发中，我们比较常用的是使用关联属性的方式来扩展我们的“属性”，以便在开发中简单代码。我们在开发中使用关联属性扩展所有响应事件、将代理转换成block版等。比如，我们可以将所有继承于UIControl的控件，都拥有block版的点击响应，那么我们就可以给UIControl分类追加TouchUp、TouchDown、TouchOut的block等。
 
 对于动态获取属性的名称、属性值使用较多的地方一般是在使用第三方库中，比如MJExtension等。这些三方库都是通过这种方式将Model转换成字典，或者将字典转换成Model。
 
@@ -490,24 +489,3 @@ extension Person {
 
 阅读容易，写文章难！且看且珍惜！
 
-#关注我
-
-
-如果在使用过程中遇到问题，或者想要与我交流，可加入有问必答**QQ群：[324400294]()**
-
-关注微信公众号：[**iOSDevShares**]()
-
-关注新浪微博账号：[标哥Jacky](http://weibo.com/u/5384637337)
-
-标哥的GITHUB地址：[CoderJackyHuang](https://github.com/CoderJackyHuang)
-
-**阅读原文：**[http://www.henishuo.com/ios-runtime/](http://www.henishuo.com/ios-runtime/)
-
-#支持并捐助
-
-
-如果您觉得文章对您很有帮忙，希望得到您的支持。您的捐肋将会给予我最大的鼓励，感谢您的支持！
-
-支付宝捐助      | 微信捐助
-------------- | -------------
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/alipay-e1451124478416.jpg) | ![image](http://www.henishuo.com/wp-content/uploads/2015/12/weixin.jpg)

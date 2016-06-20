@@ -8,7 +8,7 @@
 
 # 题照
 
-![image](http://www.henishuo.com/wp-content/uploads/2016/03/interview.jpg)
+![image](http://101.200.209.244/wp-content/uploads/2016/03/interview.jpg)
 
 # 1、#import和#include的区别，@class代表什么？
 
@@ -50,7 +50,7 @@
 
 **参考答案：**
 
-在Objective-C中，没有实实存在的私有方法。通常所谓的私有方法就是放在.m文件中声明和实现，外部不能直接看到而已，但是若我们知道有这么一个API，我们是可以调用的。比如，在苹果上架会因为使用了苹果的所谓的私有API而被拒，而这个所谓的私有API就是指苹果没有公司出来，但是我们通过其它方式可以看到苹果的内部有这样一个API可以实现某些不公开的功能。
+在Objective-C中，没有实实存在的私有方法。通常所谓的私有方法就是放在.m文件中声明和实现，外部不能直接看到而已，但是若我们知道有这么一个API，我们是可以调用的。比如，在苹果上架会因为使用了苹果的所谓的私有API而被拒，而这个所谓的私有API就是指苹果没有公开出来，但是我们通过其它方式可以看到苹果的内部有这样一个API可以实现某些不公开的功能。
 
 私有变量是有的，可以通过@private来声明私有变量。比如：
 
@@ -67,14 +67,17 @@
 testModel->_privateName = @"报错了，提示成员变量是受保护的";
 ```
 
+**但是**，所谓的私有变量也不是绝对不能访问的，通过runtime或者KVC是可以获取或者修改值的。
+
 # 4、Objective-C有多继承吗？没有的话用什么代替？Cocoa中所有的类都是NSObject的子类？
 
 **参考答案：**
 
 
-Objective-C没有多继承，这是去掉C++中多继承的特性，改成使用protocol来代替。Cocoa中所有的类都是NSObject的子类，这是正确的。如果学习过runtime，应该知道根类是NSOjbect，它元类的isa指针指向的是NSObject。参考下图：
+Objective-C没有多继承，这是去掉C++中多继承的特性，改成使用protocol来代替。Cocoa中所有的类不都是NSObject的子类，还有部分继续于NSProxy的（可用于实现动态代理）。绝大部分根类是NSOjbect，它元类的isa指针指向的是NSObject。参考下图：
 
-![image](http://www.henishuo.com/wp-content/uploads/2015/12/inherit.png)
+![image](http://101.200.209.244/wp-content/uploads/2015/12/inherit.png)
+
 
 # 5、浅拷贝与深拷贝的区别是什么
 
@@ -94,10 +97,10 @@ Objective-C没有多继承，这是去掉C++中多继承的特性，改成使用
 
 * readwrite：代表可读可写，会生成getter和setter方法
 * readonly：代表只读，只生成getter方法，不会生成setter方法
-* assign：代表普通赋值，通常用于非对象类型
+* assign：代表普通赋值，通常用于非对象类型，MRC下对于弱引用也使用assign，ARC下弱引用通常使用weak
 * retain：MRC下才能手动使用，与ARC下的strong一样，指定强引用，引用计数加1
 * copy：代表拷贝，也是强引用，引用计数加1，进行指针拷贝
-* nonatomic：代表非原子操作，非线程安全，但可提高性能
+* nonatomic：代表非原子操作，非线程安全，但可提高性能，通常声明属性时都会添加
 
 在哪种情况使用：
 
@@ -111,8 +114,6 @@ Objective-C没有多继承，这是去掉C++中多继承的特性，改成使用
 # 7、常见的objective-c的数据类型有哪些，和C的基本数据类型有什么区别？
 
 **参考答案：**
-
-这是一道弱智的问题，出题者一定是脑子进水了。
 
 常见数据类型：NSData、NSArray、NSDictionary、NSSet、NSCountedSet、NSNumber、NSInteger、NSUInteger、所有基本C数据类型，当然还有对应可变的类型。
 
@@ -185,7 +186,9 @@ Objective-C没有多继承，这是去掉C++中多继承的特性，改成使用
 
 #最后
 
-本来不想整理的，看着再过3个月，就要离开北京，去深圳稳定发展了，也当是给自己提前积累多一些吧！题目来源于某某人（面试者）
+本来不想整理的，看着再过10多天，就要离开北京，去深圳稳定发展了，也当是给自己提前积累多一些吧！题目来源于某某人（面试者）！
+
+今天温习了一下之前整理的东西，同时也修正部分内容！
 
 
 

@@ -1,6 +1,6 @@
 #前言
 
-如果没有阅读过前一份中级面试题【[iOS中级面试题一](http://www.henishuo.com/ios-middle-interview-questions-one/)】，可以先阅读之。
+如果没有阅读过前一份中级面试题【[iOS中级面试题一](http://101.200.209.244/ios-middle-interview-questions-one/)】，可以先阅读之。
 
 本篇文章中所收集的面试题大部分来源来网络，小部分为笔者根据个人经验所出的面试题。所有题目都会提供参考答案，但是参考答案仅供参考，不保证一定正确，且答案不是唯一的，不同的面试官的知识面和技术水平不同也会出现不同的意见。
 
@@ -10,7 +10,7 @@
 
 * plist属性列表存储（如NSUserDefaults）
 * 文件存储（如二进制数据写入文件存储，通过NSFileManager来操作将下载起来的二进制数据写一篇文件中存储）
-* NSKeydeArchiver归档存储，常见的是自动化归档/解档处理，想要学习如何通过runtime实现自动化归档/解档，可以阅读文章：[学习通过runtime实现自动化归档/解档](http://www.henishuo.com/runtime-archive-unarchive-automaticly/)
+* NSKeydeArchiver归档存储，常见的是自动化归档/解档处理，想要学习如何通过runtime实现自动化归档/解档，可以阅读文章：[学习通过runtime实现自动化归档/解档](http://101.200.209.244/runtime-archive-unarchive-automaticly/)
 * 数据库SQLite3存储（如FMDB、Core Data）
 
 
@@ -57,7 +57,7 @@ int a = N / 2;  // 我们预想的a的值是2.5，可实际上a的值是3.5
 **参考答案：**
 
 * 对于queue中所执行的代码不一定在main thread中。如果queue是在主线程中创建的，那么所执行的代码就是在主线程中执行。如果是在子线程中创建的，那么就不会在main thread中执行。
-* 对于main queue就是在主线程中的，因此一定会在主线程中执行。获取main queue就可以了，不需要我们创建，获取方式通过调用方法dispatch_get_main_queue来获取。
+* 对于main queue就是在主线程中的，因此一定会在主线程中执行。获取main queue就可以了，不需要我们创建，获取方式通过调用方法dispatch\_get\_main\_queue来获取。
 
 #7、头文件中声明的成员变量（不是属性），外部可直接访问么？
 
@@ -124,8 +124,8 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^{
 
 **参考答案：**
 
-* 通过协议在shouldStartRequest中捕获请求，获取scheme来判断预先定义的功能，然后调用native代码。比如，定义点击图片调用native来展示大图，那么js接收到点击时，重定向将图片的url添加上自定义scheme，如HYBImagePreview://这样。更详细请阅读我的文章：[Swift版](http://www.henishuo.com/html-img-preview/)、[Objective-C版本](http://www.henishuo.com/objc-html-img-preview/)
-* 通过iOS7以后引入的JavascriptCore框架来实现，通过注入对象的方式来实现，维护起来更简单。更详细请阅读我的文章：[Oc版本与JS交互](http://www.henishuo.com/oc-js/)、[Swift版与JS交互](http://www.henishuo.com/swift-js/)、如何使用的是WKWebView，可阅读[WKWebView与JS交互](http://www.henishuo.com/wkwebview-js/)
+* 通过协议在shouldStartRequest中捕获请求，获取scheme来判断预先定义的功能，然后调用native代码。比如，定义点击图片调用native来展示大图，那么js接收到点击时，重定向将图片的url添加上自定义scheme，如HYBImagePreview://这样。更详细请阅读我的文章：[Swift版](http://101.200.209.244/html-img-preview/)、[Objective-C版本](http://101.200.209.244/objc-html-img-preview/)
+* 通过iOS7以后引入的JavascriptCore框架来实现，通过注入对象的方式来实现，维护起来更简单。更详细请阅读我的文章：[Oc版本与JS交互](http://101.200.209.244/oc-js/)、[Swift版与JS交互](http://101.200.209.244/swift-js/)、如何使用的是WKWebView，可阅读[WKWebView与JS交互](http://101.200.209.244/wkwebview-js/)
 * 通过WebViewJavascriptBridge这个第三方库来实现，具体百度吧！
 
 #14、如何浅拷贝与深拷贝的理解？
@@ -139,7 +139,7 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^{
 浅复制好比是你的影子，当你挂了，影子也消失了。
 深复制好比克隆你，即使你挂了，新克隆出来的人是新的生命，不会因为你挂了也跟着挂。
 
-#15、使用是懒加载？常见场景？
+#15、什么是懒加载？常见场景？
 
 **参考答案：**
 
@@ -171,8 +171,7 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^{
 
 其实这种只是考查对通知的简单应用。通知是多对多的关系，主要使用场景是跨模块传值。当某对象加入到通知中心后，若在对象被销毁前不将该对象从通知中心中移除，当发送通知时，就会造成崩溃。这是很常见的。所以，在添加到通知中心后，一定要在释放前移除。
 
-更详细请阅读笔者的文章：[iOS中的NSNotificationCenter](http://www.henishuo.com/ios-notification/)
-
+更详细请阅读笔者的文章：[iOS中的NSNotificationCenter](http://101.200.209.244/ios-notification/)
 
 
 #18、实现过框架或者库以供他人使用么？如果有，请谈一谈构建框架或者库时候的经验；如果没有，请设想和设计框架的public的API，并指出大概需要如何做、需要注意哪些问题，以使人人更容易地使用你的框架。
@@ -195,11 +194,11 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^{
 
 关于Masonry自动计算行高，笔者提供了swift版和oc版本的扩展，这两个版本都提供了自动计算行高的功能，并且带有缓存功能，保证永远只计算一次行高，效率就会很高，一般的应用也就不会卡屏了。
 
-学习[OC版本自动计算行高扩展](http://www.henishuo.com/masonry-cell-height-auto-calculate/)、[swift版自动计算行高扩展](http://www.henishuo.com/snapkit-auto-cell-height/)
+学习[OC版本自动计算行高扩展](http://101.200.209.244/masonry-cell-height-auto-calculate/)、[swift版自动计算行高扩展](http://101.200.209.244/snapkit-auto-cell-height/)
 
 实现原理：通过数据模型的id作为key，以确保唯一，如何才能保证复用cell时不会出现混乱。在配置完数据后，通过更新约束，得到最后一个控件的frame，就只可以判断cell实际需要的高度，并且缓存下来，下次再获取时，判断是否存在，若存在则直接返回。因此，只会计算一遍。
 
-#20、UITableView是如何计算内容高度的？为什么初始化时配置数据时，获取行高的代理方法会调用数据条数次？
+#20、UITableView是如何计算内容高度的？为什么初始化配置数据时，获取行高的代理方法会调用数据条数次？
 
 **参考答案：**
 
@@ -207,19 +206,5 @@ UITableView是继承于UIScrollView的，因此也有contentSize。要得到tabl
 
 为了提高效率，笔者写了扩展用于自动计算行高的，并且带有缓存，以保证只会计算一次，防止卡屏。做到这一点，一般的应用就可以解决卡屏的问题了。对于富文本比较多的应用，还可以继续优化哦。
 
-学习[OC版本自动计算行高扩展](http://www.henishuo.com/masonry-cell-height-auto-calculate/)、[swift版自动计算行高扩展](http://www.henishuo.com/snapkit-auto-cell-height/)
-
-#关注我
-
-
-关注                | 账号              | 备注
--------------      | -------------     | ----------------
-Swift/ObjC技术群一  | 324400294         |  群一若已满，请申请群二
-Swift/ObjC技术群二  | 494669518         | 群二若已满，请申请群三
-Swift/ObjC技术群三  | 461252383         | 群三若已满，会有提示信息
-关注微信公众号       | iOSDevShares      | 关注微信公众号，会定期地推送好文章
-关注新浪微博账号      |  [标哥Jacky](http://weibo.com/u/5384637337) | 关注微博，每次发布文章都会分享到新浪微博
-关注标哥的GitHub     | [CoderJackyHuang](https://github.com/CoderJackyHuang) | 这里有很多的Demo和开源组件
-关于我               | [进一步了解标哥](http://www.henishuo.com/about-biaoge/) | 如果觉得文章对您很有帮助，可捐助我！
-
+学习[OC版本自动计算行高扩展](http://101.200.209.244/masonry-cell-height-auto-calculate/)、[swift版自动计算行高扩展](http://101.200.209.244/snapkit-auto-cell-height/)
 
