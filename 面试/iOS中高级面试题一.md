@@ -9,9 +9,7 @@
 
 由一个app1跳转到app2之后，app2完成某项任务之后，怎么把app2的完成信息传到app1（自己的程序是app1），传的是什么类型的数据，怎么进行解析？
 
-**参考答案：**
-
-笔者针对这个问题，写了一篇文章并提供demo下载：[iOS App之间如何通信](http://www.henishuo.com/ios-app-communication/)
+**参考答案：**[iOS App之间如何通信](http://101.200.209.244/ios-app-communication/)
 
 #2.Socket在传输过程中用的是什么类型的数据：结构体还是文本？如果是文本，那么怎么进行编码和解码？
 
@@ -20,27 +18,15 @@
 
 笔者学习相关socket知识，写了这几篇文章，可以参考：
 
-[iOS Socket理论知识](http://www.henishuo.com/ios-socket-theory/)
-
-[iOS Socket UDP编程-C语言版](http://www.henishuo.com/ios-socket-udp-c-version/)
-
-[iOS Socket TCP编程-C语言版](http://www.henishuo.com/ios-socket-tcp-c-version/)
-
-[iOS Socket编程-Objective-C原生API版]()
-
-[iOS Socket编程-Objective-C基于CocoaAsyncSocket版]()
-
-[iOS Socket编程-Swift原生API版]()
-
-[iOS Socket编程-Swift基于AsyncSocket版]()
+* [iOS Socket理论知识](http://101.200.209.244/ios-socket-theory/)
+* [iOS Socket UDP编程-C语言版](http://101.200.209.244/ios-socket-udp-c-version/)
+* [iOS Socket TCP编程-C语言版](http://101.200.209.244/ios-socket-tcp-c-version/)
 
 #3、图片压缩处理问题
 
 **参考答案：**
 
-关于图片的压缩处理，在ios中常用的方法是先处理像素再处理尺寸。大家可以参考笔者所写的这篇处理压缩处理文章：
-
-[iOS 图片压缩处理](http://www.henishuo.com/ios-image-compressed/)
+关于图片的压缩处理，在ios中常用的方法是先处理像素再处理尺寸。大家可以参考笔者所写的这篇处理压缩处理文章：[iOS 图片压缩处理](http://101.200.209.244/ios-image-compressed/)
 #4、在做图片优化处理的时候，怎么将一个原图比较小（或大）的image放到一个固定的imageview中，如何减少失真度，除了这个，图片优化还有哪些方法？
 
 **参考答案：**
@@ -151,7 +137,7 @@ if ([response isKindOfClass:[NSDictionary class]]) {
 
 使用Dispatch Group追加block到Global Group Queue,这些block如果全部执行完毕，就会执行Main Dispatch Queue中的结束处理的block。
 
-当放到group中的所有请求都完成时，才会回调dispatch_group_notify的block：
+当放到group中的所有请求都完成时，才会回调dispatch\_group\_notify的block：
 
 ```
 dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -165,7 +151,7 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^{
 ```
 # 11、使用GCD的时候，如何在一个group里添加几个任务的依赖关系（这几个任务放在一个组中）**参考答案：**
 
-这个不太清楚想问什么，笔者翻看了看GCD中dispatch_group_t里，也没有什么可以设置同一个组内的任务依赖关系的，就看到dispatch_group_wait这个API：
+这个不太清楚想问什么，笔者翻看了看GCD中dispatch\_group\_t里，也没有什么可以设置同一个组内的任务依赖关系的，就看到dispatch\_group\_wait这个API：
 
 ```
 long
@@ -208,6 +194,4 @@ dispatch_group_notify(group, dispatch_get_main_queue(), ^{
 
 **参考答案：**
 
-这个问题，笔者在另外一篇文章中写到，然后也在微博上收集了很多朋友们的想法。请大家稳步去阅读吧！
-
-[iOS如何在用户修改头像后正常显示](http://www.henishuo.com/ios-image-change-reload-cache/)
+这个问题，笔者在另外一篇文章中写到，然后也在微博上收集了很多朋友们的想法。请大家移步去阅读[iOS如何在用户修改头像后正常显示](http://101.200.209.244/ios-image-change-reload-cache/)

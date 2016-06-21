@@ -6,7 +6,7 @@
 
 #题目照
 
-![image](http://www.henishuo.com/wp-content/uploads/2016/02/goios.jpg)
+![image](http://101.200.209.244/wp-content/uploads/2016/02/goios.jpg)
 
 #1、编程规范问题
 
@@ -14,7 +14,7 @@
 
 **参考答案：**
 
-仅供参考：[标哥的编码规范](http://www.henishuo.com/ios-code-style/)
+仅供参考：[标哥的编码规范](http://101.200.209.244/ios-code-style/)
 
 #2、请写出UIViewController的完整生命周期
 
@@ -55,17 +55,17 @@
 注意，当从ViewController进入到HYBViewController控制器时，注意出现顺序如下：
 
 ```
-* -[ViewController viewWillDisappear:]
-* -[HYBViewController viewWillAppear:]
-* -[HYBViewController viewDidAppear:]
-* -[ViewController viewDidDisappear:]
+-[ViewController viewWillDisappear:]
+-[HYBViewController viewWillAppear:]
+-[HYBViewController viewDidAppear:]
+-[ViewController viewDidDisappear:]
 ```
 
 在HYBViewController完全出现后，才会调用前一个控制器的完全消失。像这种要不同控制器之间导航条隐藏与显示控制问题，就需要特别注意其生命周期的顺序。
 
 **注意：**有朋友说这里是错的，不过笔者打印出来验证发现就是这样的顺序！用模态呈现测试!截图如下：
 
-![image](http://www.henishuo.com/wp-content/uploads/2016/03/vcprint-e1458225641298.png)
+![image](http://101.200.209.244/wp-content/uploads/2016/03/vcprint-e1458225641298.png)
 
 请大家看看哪里出错！
 
@@ -139,7 +139,7 @@ iOS使用hit-testing寻找触摸的view。 Hit-Testing通过检查触摸点是�
 
 官方小例子事件响应者链如下图所示：
 
-![image](http://www.henishuo.com/wp-content/uploads/2016/02/hit_testing_2x.png)
+![image](http://101.200.209.244/wp-content/uploads/2016/02/hit_testing_2x.png)
 
 * 触摸点在view A中，所以要先检查子view B和C。
 * 触摸点不在view B中，但在C中，所以检查C的子view D和E。
@@ -150,7 +150,7 @@ Hit-test view是处理触摸事件的第一选择，如果hit-test view不能处
 
 事件传递链如下图所示：
 
-![image](http://www.henishuo.com/wp-content/uploads/2016/02/iOS_responder_chain.png)
+![image](http://101.200.209.244/wp-content/uploads/2016/02/iOS_responder_chain.png)
 
 左半图:
 
@@ -181,7 +181,7 @@ Steps 1-3 repeat until the event reaches the root view controller.）
 
 关于block循环引用问题是非常常见的，但是很多人没有深入研究过，xcode没有提示警告就以为没有形成循环引用了。笔者也见过很多高级iOS开发工程师的同事，使用block并不会分析是否形成循环引用。
 
-推荐阅读[iOS Block循环引用精讲](http://www.henishuo.com/ios-block-memory-cycle/)
+推荐阅读[iOS Block循环引用精讲](http://101.200.209.244/ios-block-memory-cycle/)
 
 #6、请比较GCD与NSOperation的异同
 
@@ -190,7 +190,7 @@ Steps 1-3 repeat until the event reaches the root view controller.）
 * 相同点：GCD和NSOperation都是苹果提供的多线程实现方案。
 * 不同点：GCD是轻量级的纯C写的多线程实现方案，使用起来非常方便，在开发中大量使用，但是对于取消和暂停线程就比较麻烦些。而NSOperation是面向对象的，兼容KVO，对于取消和暂停任务是非常容易的。
 
-更详细地，推荐阅读：[iOS图解多线程](http://www.henishuo.com/ios-multithread-detail/)
+更详细地，推荐阅读：[iOS图解多线程](http://101.200.209.244/ios-multithread-detail/)
 
 #7、请写出NSTimer使用时的注意事项（两项即可）
 
@@ -210,7 +210,7 @@ mode主要是用来指定事件在运行循环中的优先级的，分为：
 
 如果我们把一个NSTimer对象以NSDefaultRunLoopMode（kCFRunLoopDefaultMode）添加到主运行循环中的时候, ScrollView滚动过程中会因为mode的切换，而导致NSTimer将不再被调度。当我们滚动的时候，也希望不调度，那就应该使用默认模式。但是，如果希望在滚动时，定时器也要回调，那就应该使用common mode。
 
-如果想更深入地了解RunLoop，请参考[iOS之Run Loop详解](http://www.henishuo.com/ios-runloop-in-detail/)
+如果想更深入地了解RunLoop，请参考[iOS之Run Loop详解](http://101.200.209.244/ios-runloop-in-detail/)
 
 如果想要销毁timer，则必须先将timer置为失效，否则timer就一直占用内存而不会释放。造成逻辑上的内存泄漏。该泄漏不能用xcode及instruments测出来。
 另外对于要求必须销毁timer的逻辑处理，未将timer置为失效，若每次都创建一次，则之前的不能得到释放，则会同时存在多个timer的实例在内存中。
@@ -228,19 +228,11 @@ mode主要是用来指定事件在运行循环中的优先级的，分为：
 
 动画的开始和结束都可以通过CAMediaTiming协议来处理，核心动画的基类是遵守了CAMediaTiming协议的，可以指定动画开始时间、动画时长、动画播放速度、动画在完成时的行为（停留在结束处、动画回到开始处、动画完成时移除动画）。
 
-请参考笔者以前给公司所有团队分享的知识点：[说说Core Animation](http://www.henishuo.com/core-animation/)
+请参考笔者以前给公司所有团队分享的知识点：[说说Core Animation](http://101.200.209.244/core-animation/)
 
 #最后
 
 学习完这份笔试题的相关知识点，再整理成本篇文章，真心是累！且看且珍惜吧！
 
-若支持笔者，不防打赏表示表示~
-
 又一个夜深人静了~风儿挺大的！打一把梦三准备sleep~
-
-
-
-#原文
-
-[阅读原文](http://www.henishuo.com/ios-needgo-interview/)
 

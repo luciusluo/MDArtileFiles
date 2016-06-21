@@ -6,7 +6,7 @@
 
 #题照
 
-![image](http://www.henishuo.com/wp-content/uploads/2016/02/baokuinterview.jpg)
+![image](http://101.200.209.244/wp-content/uploads/2016/02/baokuinterview.jpg)
 
 #1、对数组中的元素去重复
 
@@ -157,11 +157,12 @@ NSLog(@"%@", date);
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;
 ```
 * 在iOS7以后，可以直接通过JavaScripteCore这个库来实现，通过往JS DOM注入对象，而这个对象对应于我们iOS的某个类的实例。更详细请阅读：
-   * [OC JavaScriptCore与js交互](http://www.henishuo.com/oc-js/)
-   * [WKWebView新特性及JS交互](http://www.henishuo.com/wkwebview-js/)
-   * [Swift JavaScriptCore与JS交互](http://www.henishuo.com/swift-js/)
+   * [OC JavaScriptCore与js交互](http://101.200.209.244/oc-js/)
+   * [WKWebView新特性及JS交互](http://101.200.209.244/wkwebview-js/)
+   * [Swift JavaScriptCore与JS交互](http://101.200.209.244/swift-js/)
 
-* 可以通过WebViewJavascriptBridge来实现。具体如何使用，请大家去其它博客搜索吧！
+* 可以通过WebViewJavascriptBridge来实现
+  * [WebViewJavascriptBridge详细使用](http://101.200.209.244/webviewjavascriptbridge-detail-use/) 
 
 优缺点：
 
@@ -192,13 +193,13 @@ NSLog(@"%@", date);
 dispatch_queue_t q = dispatch_queue_create("...", DISPATCH_QUEUE_SERIAL);
 ```
 
-* 并行队列： 队列中的任务通常会并发执行
+* 并发队列： 队列中的任务通常会并发执行
 
 ```
 dispatch_queue_t q = dispatch_queue_create("......", DISPATCH_QUEUE_CONCURRENT);
 ```
 
-* 全局队列：是系统的，直接拿过来（GET）用就可以；与并行队列类似
+* 全局队列：是系统的，直接拿过来（GET）用就可以；与并发队列类似
 
 ```
 dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);
@@ -210,11 +211,11 @@ dispatch_queue_t q = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 
 dispatch_queue_t q = dispatch_get_main_queue();
 ```
 
-上面这四种是针对GCD来讲的，串行队列中的任务只能一个个地执行，在前一个没有执行完毕之前，下一个只能等待。并行队列可以并发地执行任务，因此多个任务之间执行的顺序不能确定，当添加一个新的任务时，交由GCD来判断是否要创建新的新的线程。
+上面这四种是针对GCD来讲的，串行队列中的任务只能一个个地执行，在前一个没有执行完毕之前，下一个只能等待。并发队列可以并发地执行任务，因此多个任务之间执行的顺序不能确定，当添加一个新的任务时，交由GCD来判断是否要创建新的新的线程。
 
 大家可以阅读图片多线程，也许更明了：
 
-* [iOS图解多线程](http://www.henishuo.com/ios-multithread-detail/)
+* [iOS图解多线程](http://101.200.209.244/ios-multithread-detail/)
 
 #8、描述一下iOS的内存管理，在开发中对于内存的使用和优化包含哪些方面。我们在开发中应该注意哪些问题。
 
@@ -246,7 +247,7 @@ dispatch_queue_t q = dispatch_get_main_queue();
 
 * 使用Autorelease Pool：在某些循环创建临时变量处理数据时，自动释放池以保证能及时释放内存。
 
-* 正确选择图片加载方式：详情阅读[细读UIImage加载方式](http://www.henishuo.com/image-loaded-method/)
+* 正确选择图片加载方式：详情阅读[细读UIImage加载方式](http://101.200.209.244/image-loaded-method/)
 
 #9、plist文件是用来做什么的。一般用它来处理一些什么方面的问题。
 
@@ -266,7 +267,7 @@ plist是iOS系统中特有的文件格式。我们常用的NSUserDefaults偏好�
 * SQLite3
 * Core Data
 
-详情请阅读：[iOS常用的持久化存储方式](http://www.henishuo.com/ios-persistent-storage/)
+详情请阅读：[iOS常用的持久化存储方式](http://101.200.209.244/ios-persistent-storage/)
 
 
 #11、请简单写出增、删、改、查的SQL语句。
@@ -278,7 +279,7 @@ plist是iOS系统中特有的文件格式。我们常用的NSUserDefaults偏好�
 增：
 
 ```
-insert into tb_blogs(name, url) values('标哥的技术博客','http://www.henishuo.com');
+insert into tb_blogs(name, url) values('标哥的技术博客','http://101.200.209.244');
 ```
 
 删：
@@ -290,7 +291,7 @@ delete from tb_blogs where blogid = 1;
 改：
 
 ```
-update tb_blogs set url = 'www.henishuo.com' where blogid = 1;
+update tb_blogs set url = '101.200.209.244' where blogid = 1;
 ```
 
 查：
